@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 4000;
 const ADMIN_USER = "ADMIN";
 const ADMIN_PASS = "LIEZL2026!";
 
-// 📧 EMAIL CONFIGURATION (PINAGSAMA AT INALISAN NG SPACES ANG APP PASSWORD)
+// 📧 EMAIL CONFIGURATION
 const RESORT_EMAIL = "tolledogerald6@gmail.com";
-const GMAIL_APP_PASS = "hmnechkaznphhbok"; // Walang spaces para iwas authentication error
+const GMAIL_APP_PASS = "hmnechkaznphhbok";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -52,7 +52,6 @@ app.use(express.static('public'));
 app.use('/slider-images', express.static(sliderFolder));
 app.use('/facility-images', express.static(facilityFolder));
 
-// 🔒 MULTI-DEVICE AUTH MIDDLEWARE
 function authAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -69,8 +68,8 @@ function loadDB() {
       reviews: [{ id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }],
       facilities: [],
       rates: { dayTour: 1500, nightTour: 2000, overnight: 3500 },
-      gcashName: "LIEZL RESORT",
-      gcashNumber: "0912-345-6789"
+      gcashName: "SH***A I.",
+      gcashNumber: "09655247530"
     };
     fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
     return initialData;
@@ -79,8 +78,8 @@ function loadDB() {
   if (!data.reviews) data.reviews = [];
   if (!data.facilities) data.facilities = [];
   if (!data.rates) data.rates = { dayTour: 1500, nightTour: 2000, overnight: 3500 };
-  if (!data.gcashName) data.gcashName = "LIEZL RESORT";
-  if (!data.gcashNumber) data.gcashNumber = "09XX-XXX-XXXX";
+  if (!data.gcashName) data.gcashName = "SH***A I.";
+  if (!data.gcashNumber) data.gcashNumber = "09655247530";
   return data;
 }
 
@@ -88,21 +87,17 @@ function saveDB(data) {
   fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); 
 }
 
-// 📧 AUTO SEND GMAIL NOTIFICATION FUNCTION (MAY ERROR LOGGING)
 function sendEmailNotification(subject, text) {
   const mailOptions = {
-    from: `"Casa Liezl Resort System" <${RESORT_EMAIL}>`,
+    from: `"Casa Liezl Private Resort" <${RESORT_EMAIL}>`,
     to: RESORT_EMAIL,
     subject: subject,
     text: text
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.error("❌ Email Sending Failed Error:", err);
-    } else {
-      console.log("✅ Email Sent Successfully Response:", info.response);
-    }
+    if (err) console.error("❌ Email Sending Failed Error:", err);
+    else console.log("✅ Email Sent Successfully Response:", info.response);
   });
 }
 
@@ -137,7 +132,7 @@ app.get('/api/download-voucher/:id', (req, res) => {
   res.setHeader('Content-type', 'application/pdf');
 
   doc.pipe(res);
-  doc.fillColor('#008080').fontSize(22).text('CASA LIEZL RESORT', { align: 'center' });
+  doc.fillColor('#008080').fontSize(22).text('CASA LIEZL PRIVATE RESORT', { align: 'center' });
   doc.fontSize(12).fillColor('#666').text('Official Booking Receipt & Confirmation Voucher', { align: 'center' });
   doc.moveDown(1.5);
   doc.fillColor('#333').fontSize(12);
@@ -164,7 +159,7 @@ app.get('/api/download-voucher/:id', (req, res) => {
   doc.text(`GCash Ref No: ${booking.gcashRef}`);
   doc.text(`Status: ${booking.status}`);
   doc.moveDown(2);
-  doc.fontSize(10).fillColor('#888').text('Pakipakita ang PDF Voucher na ito sa entrance ng Casa Liezl Resort.', { align: 'center' });
+  doc.fontSize(10).fillColor('#888').text('Pakipakita ang PDF Voucher na ito sa entrance ng Casa Liezl Private Resort.', { align: 'center' });
   doc.end();
 });
 
@@ -188,7 +183,7 @@ app.delete('/api/reviews/:id', authAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// FACILITIES GALLERY APIS (IMAGES AND VIDEOS)
+// FACILITIES GALLERY APIS
 app.get('/api/facilities', (req, res) => res.json(loadDB().facilities || []));
 
 app.post('/upload-facility', uploadFacility.single('facilityMedia'), (req, res) => {
@@ -245,10 +240,10 @@ app.delete('/api/sliders/:name', authAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// BOOKING SUBMISSION API (AUTO-SENDS EMAIL TO YOU)
+// BOOKING SUBMISSION API
 app.post('/api/book', (req, res) => {
   const { name, phone, checkInDate, stayType, packageType, guests, notes, gcashRef } = req.body;
-  if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success: false, message: "Please complete all required fields!" });
+  if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success.false, message: "Please complete all required fields!" });
 
   const db = loadDB();
   if (db.bookings.some(b => b.checkInDate === checkInDate && b.status === 'APPROVED')) {
@@ -272,9 +267,8 @@ app.post('/api/book', (req, res) => {
   db.bookings.unshift(bookingObj);
   saveDB(db);
 
-  // AUTO SEND EMAIL NOTIFICATION TO tolledogerald6@gmail.com
   const emailContent = 
-    `🌴 BAGONG BOOKING REQUEST - CASA LIEZL RESORT 🌴\n\n` +
+    `🌴 BAGONG BOOKING REQUEST - CASA LIEZL PRIVATE RESORT 🌴\n\n` +
     `Name: ${bookingObj.name}\n` +
     `Phone: ${bookingObj.phone}\n` +
     `Check-in Date: ${bookingObj.checkInDate} (${bookingObj.stayType})\n` +
@@ -283,12 +277,12 @@ app.post('/api/book', (req, res) => {
     `Notes: ${bookingObj.notes || 'Wala'}\n\n` +
     `Pakicheck ang Admin Panel para ma-verify ang GCash deposit!`;
 
-  sendEmailNotification(`[CASA LIEZL] New Booking Request from ${bookingObj.name}`, emailContent);
+  sendEmailNotification(`[CASA LIEZL PRIVATE] New Booking Request from ${bookingObj.name}`, emailContent);
 
   res.json({ success: true, message: "Reservation request submitted successfully!", bookingId: bookingObj.id });
 });
 
-// ADMIN APIS (MULTI-DEVICE LOGIN)
+// ADMIN APIS
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   if ((username || '').trim().toUpperCase() === ADMIN_USER && (password || '').trim() === ADMIN_PASS) {
@@ -319,13 +313,12 @@ app.post('/api/admin/process-booking', authAdmin, (req, res) => {
 
   saveDB(db);
 
-  // AUTO SEND EMAIL NOTIFICATION WHEN STATUS CHANGES
   sendEmailNotification(
-    `[CASA LIEZL] Booking ${target.status}: ${target.name}`,
+    `[CASA LIEZL PRIVATE] Booking ${target.status}: ${target.name}`,
     `Ang reservation ni ${target.name} para sa petsang ${target.checkInDate} ay na-update ang status sa: ${target.status}`
   );
 
   res.json({ success: true, status: target.status });
 });
 
-app.listen(PORT, () => console.log(`Casa Liezl Resort Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Casa Liezl Private Resort Server running on port ${PORT}`));
