@@ -28,22 +28,31 @@ let activeSessions = new Set();
 const dbFile = path.join(__dirname, 'resort_db.json');
 const uploadFolder = path.join(__dirname, 'public', 'uploads');
 const sliderFolder = path.join(__dirname, 'public', 'uploads', 'slider');
+const facilityFolder = path.join(__dirname, 'public', 'uploads', 'facility');
 
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
 if (!fs.existsSync(sliderFolder)) fs.mkdirSync(sliderFolder, { recursive: true });
+if (!fs.existsSync(facilityFolder)) fs.mkdirSync(facilityFolder, { recursive: true });
 
-const storage = multer.diskStorage({
+const sliderStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, sliderFolder),
   filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
-const upload = multer({ storage });
+
+const facilityStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, facilityFolder),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+});
+
+const uploadSlider = multer({ storage: sliderStorage });
+const uploadFacility = multer({ storage: facilityStorage });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/slider-images', express.static(sliderFolder));
+app.use('/facility-images', express.static(facilityFolder));
 
-// 🔒 ADMIN AUTHENTICATION MIDDLEWARE
 function authAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -59,8 +68,9 @@ function loadDB() {
     const initialData = {
       bookings: [],
       reviews: [
-        { id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner. Babalik kami!", date: "10/24/2026" }
+        { id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }
       ],
+      facilities: [],
       rates: { dayTour: 1500, nightTour: 2000, overnight: 3500 },
       gcashName: "LIEZL RESORT",
       gcashNumber: "0912-345-6789"
@@ -70,6 +80,7 @@ function loadDB() {
   }
   const data = JSON.parse(fs.readFileSync(dbFile, 'utf8'));
   if (!data.reviews) data.reviews = [];
+  if (!data.facilities) data.facilities = [];
   if (!data.rates) data.rates = { dayTour: 1500, nightTour: 2000, overnight: 3500 };
   if (!data.gcashName) data.gcashName = "LIEZL RESORT";
   if (!data.gcashNumber) data.gcashNumber = "09XX-XXX-XXXX";
@@ -94,17 +105,12 @@ function sendEmailNotification(subject, text) {
   });
 }
 
-// ⚙️ GET RESORT SETTINGS (PUBLIC)
+// ⚙️ SETTINGS
 app.get('/api/settings', (req, res) => {
   const db = loadDB();
-  res.json({
-    gcashName: db.gcashName,
-    gcashNumber: db.gcashNumber,
-    rates: db.rates
-  });
+  res.json({ gcashName: db.gcashName, gcashNumber: db.gcashNumber, rates: db.rates });
 });
 
-// ⚙️ UPDATE RESORT SETTINGS (ADMIN AUTH PROTECTED)
 app.post('/api/admin/settings', authAdmin, (req, res) => {
   const { gcashName, gcashNumber, dayTour, nightTour, overnight } = req.body;
   const db = loadDB();
@@ -122,7 +128,7 @@ app.post('/api/admin/settings', authAdmin, (req, res) => {
   res.json({ success: true, message: "Settings updated successfully!" });
 });
 
-// 📄 PDF VOUCHER GENERATOR API
+// 📄 PDF VOUCHER
 app.get('/api/download-voucher/:id', (req, res) => {
   const db = loadDB();
   const booking = db.bookings.find(b => b.id === parseInt(req.params.id));
@@ -175,18 +181,18 @@ app.get('/api/download-voucher/:id', (req, res) => {
   doc.end();
 });
 
-// REVIEWS APIS
+// REVIEWS
 app.get('/api/reviews', (req, res) => res.json(loadDB().reviews || []));
 
 app.post('/api/reviews', (req, res) => {
   const { name, rating, comment } = req.body;
-  if (!name || !comment) return res.json({ success: false, message: "Paki-fill up ang pangalan at komento!" });
+  if (!name || !comment) return res.json({ success: false, message: "Please enter your name and review!" });
 
   const db = loadDB();
   const newReview = { id: Date.now(), name: name.trim(), rating: parseInt(rating) || 5, comment: comment.trim(), date: new Date().toLocaleDateString() };
   db.reviews.unshift(newReview);
   saveDB(db);
-  res.json({ success: true, message: "Salamat sa iyong review!" });
+  res.json({ success: true, message: "Thank you for your feedback!" });
 });
 
 app.delete('/api/reviews/:id', authAdmin, (req, res) => {
@@ -196,7 +202,41 @@ app.delete('/api/reviews/:id', authAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// BOOKED DATES & OCCUPANCY API
+// FACILITIES GALLERY APIS
+app.get('/api/facilities', (req, res) => res.json(loadDB().facilities || []));
+
+app.post('/upload-facility', uploadFacility.single('facilityImage'), (req, res) => {
+  if (!req.file) return res.redirect('/admin.html');
+
+  const { facilityTitle, facilityCategory } = req.body;
+  const db = loadDB();
+
+  const newFacility = {
+    id: 'fac_' + Date.now(),
+    title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
+    category: facilityCategory || 'pools',
+    filename: req.file.filename
+  };
+
+  db.facilities.unshift(newFacility);
+  saveDB(db);
+  res.redirect('/admin.html');
+});
+
+app.delete('/api/facilities/:id', authAdmin, (req, res) => {
+  const db = loadDB();
+  const target = db.facilities.find(f => f.id === req.params.id);
+
+  if (target) {
+    const filePath = path.join(facilityFolder, target.filename);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    db.facilities = db.facilities.filter(f => f.id !== req.params.id);
+    saveDB(db);
+  }
+  res.json({ success: true });
+});
+
+// BOOKED DATES
 app.get('/api/booked-dates', (req, res) => {
   const db = loadDB();
   const approvedDates = db.bookings.filter(b => b.status === 'APPROVED').map(b => b.checkInDate);
@@ -211,7 +251,7 @@ app.get('/api/sliders', (req, res) => {
   });
 });
 
-app.post('/upload-slider', upload.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
+app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
 
 app.delete('/api/sliders/:name', authAdmin, (req, res) => {
   const filePath = path.join(sliderFolder, req.params.name);
@@ -224,13 +264,13 @@ app.post('/api/book', (req, res) => {
   const { name, phone, checkInDate, stayType, packageType, guests, notes, gcashRef } = req.body;
 
   if (!name || !phone || !checkInDate || !gcashRef) {
-    return res.json({ success: false, message: "Kumpletuhin ang lahat ng kinakailangang impormasyon!" });
+    return res.json({ success: false, message: "Please complete all required fields!" });
   }
 
   const db = loadDB();
   const isAlreadyBooked = db.bookings.some(b => b.checkInDate === checkInDate && b.status === 'APPROVED');
   if (isAlreadyBooked) {
-    return res.json({ success: false, message: "Paumanhin! May nakatala nang aprubadong reservation sa napiling petsa." });
+    return res.json({ success: false, message: "Sorry, this date is already fully booked." });
   }
 
   const bookingObj = {
@@ -251,14 +291,14 @@ app.post('/api/book', (req, res) => {
   saveDB(db);
 
   const emailContent = 
-    `🌴 BAGONG BOOKING REQUEST - CASA LIEZL RESORT 🌴\n\n` +
+    `BAGONG BOOKING REQUEST - CASA LIEZL RESORT\n\n` +
     `Name: ${bookingObj.name}\n` +
     `Phone: ${bookingObj.phone}\n` +
     `Check-in Date: ${bookingObj.checkInDate} (${bookingObj.stayType})\n` +
     `Package: ${bookingObj.packageType} (${bookingObj.guests} Pax)\n` +
     `GCash Reference No: ${bookingObj.gcashRef}\n` +
-    `Notes: ${bookingObj.notes || 'Wala'}\n\n` +
-    `Pakicheck ang Admin Panel para ma-verify ang GCash deposit!`;
+    `Notes: ${bookingObj.notes || 'None'}\n\n` +
+    `Please check the Admin Panel to confirm GCash downpayment!`;
 
   sendEmailNotification(`[CASA LIEZL] New Booking Request from ${bookingObj.name}`, emailContent);
 
@@ -273,7 +313,7 @@ app.post('/api/admin/login', (req, res) => {
     activeSessions.add(token);
     res.json({ success: true, token });
   } else {
-    res.status(401).json({ success: false, message: "Mali ang Username o Password!" });
+    res.status(401).json({ success: false, message: "Invalid Username or Password!" });
   }
 });
 
@@ -293,7 +333,7 @@ app.post('/api/admin/process-booking', authAdmin, (req, res) => {
 
   sendEmailNotification(
     `[CASA LIEZL] Booking ${target.status}: ${target.name}`,
-    `Ang reservation ni ${target.name} para sa petsang ${target.checkInDate} ay na-update ang status sa: ${target.status}`
+    `Reservation for ${target.name} on ${target.checkInDate} status updated to: ${target.status}`
   );
 
   res.json({ success: true, status: target.status });
