@@ -34,7 +34,7 @@
       padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
     }
 
-    /* REVENUE SUMMARY CARDS */
+    /* REVENUE & STATS CARDS */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
     .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
     .stat-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
@@ -45,21 +45,14 @@
       background: rgba(0,0,0,0.7); display: flex; justify-content: center;
       align-items: center; z-index: 999;
     }
-
     .login-box {
       background: #fff; padding: 30px; border-radius: 10px;
       width: 90%; max-width: 380px; text-align: center;
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
     .login-box h3 { color: var(--primary); margin-bottom: 15px; }
-    .login-box input {
-      width: 100%; padding: 10px; margin-bottom: 12px;
-      border: 1px solid var(--border); border-radius: 5px; font-size: 0.95rem;
-    }
-    .btn-login {
-      width: 100%; background: var(--primary); color: #fff;
-      padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
-    }
+    .login-box input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 5px; }
+    .btn-login { width: 100%; background: var(--primary); color: #fff; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
 
     .section-box {
       background: var(--card-bg); padding: 20px; border-radius: 8px;
@@ -71,11 +64,7 @@
     .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background: #000; }
     .slider-card img, .slider-card video { width: 100%; height: 100px; object-fit: cover; }
-
-    .btn-del-img {
-      position: absolute; top: 5px; right: 5px; background: var(--danger);
-      color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem; z-index: 5;
-    }
+    .btn-del-img { position: absolute; top: 5px; right: 5px; background: var(--danger); color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem; z-index: 5; }
 
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .form-group { margin-bottom: 15px; }
@@ -121,10 +110,14 @@
       <button class="btn-logout" onclick="logoutAdmin()">LOGOUT</button>
     </div>
 
-    <!-- 📊 REVENUE & STATS TRACKER -->
+    <!-- 📊 REVENUE & EARNINGS SUMMARY STATS -->
     <div class="stats-grid">
       <div class="stat-card">
-        <h4>💰 Total Approved Bookings</h4>
+        <h4>💰 Estimated Approved Revenue</h4>
+        <div class="stat-value" id="statRevenue">₱0</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--success);">
+        <h4>✅ Approved Bookings</h4>
         <div class="stat-value" id="statTotalBookings">0</div>
       </div>
       <div class="stat-card" style="border-left-color: var(--warning);">
@@ -138,28 +131,13 @@
       <h3>⚙️ GCash & Resort Rates Settings</h3>
       <form onsubmit="saveSettings(event)">
         <div class="form-row">
-          <div class="form-group">
-            <label>GCash Account Name</label>
-            <input type="text" id="setGcashName" required placeholder="e.g. SH***A I.">
-          </div>
-          <div class="form-group">
-            <label>GCash Number</label>
-            <input type="text" id="setGcashNum" required placeholder="09XXXXXXXXX">
-          </div>
+          <div class="form-group"><label>GCash Account Name</label><input type="text" id="setGcashName" required></div>
+          <div class="form-group"><label>GCash Number</label><input type="text" id="setGcashNum" required></div>
         </div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Day Tour Rate (₱)</label>
-            <input type="number" id="setRateDay" required>
-          </div>
-          <div class="form-group">
-            <label>Night Tour Rate (₱)</label>
-            <input type="number" id="setRateNight" required>
-          </div>
-          <div class="form-group">
-            <label>22-Hour Exclusive Stay Rate (₱)</label>
-            <input type="number" id="setRateOvernight" required>
-          </div>
+          <div class="form-group"><label>Day Tour Rate (₱)</label><input type="number" id="setRateDay" required></div>
+          <div class="form-group"><label>Night Tour Rate (₱)</label><input type="number" id="setRateNight" required></div>
+          <div class="form-group"><label>22-Hour Exclusive Stay Rate (₱)</label><input type="number" id="setRateOvernight" required></div>
         </div>
         <button type="submit" class="btn-action btn-approve" style="padding: 10px 20px; font-size: 0.85rem;">SAVE SETTINGS</button>
       </form>
@@ -204,7 +182,7 @@
           <option value="REJECTED">Rejected</option>
         </select>
       </div>
-
+      
       <div style="overflow-x: auto;">
         <table>
           <thead>
@@ -250,6 +228,7 @@
   <script>
     let authToken = localStorage.getItem('resortAdminToken') || "";
     let globalBookings = [];
+    let currentRates = { dayTour: 150, nightTour: 180, overnight: 300 };
 
     if (authToken) { showDashboard(); }
 
@@ -288,13 +267,15 @@
 
     function loadSettings() {
       fetch('/api/settings').then(r => r.json()).then(s => {
-        document.getElementById('setGcashName').value = s.gcashName || 'SH***A I.';
-        document.getElementById('setGcashNum').value = s.gcashNumber || '09655247530';
+        document.getElementById('setGcashName').value = s.gcashName || 'LIEZL RESORT';
+        document.getElementById('setGcashNum').value = s.gcashNumber || '09XX-XXX-XXXX';
         if (s.rates) {
-          document.getElementById('setRateDay').value = s.rates.dayTour || 1500;
-          document.getElementById('setRateNight').value = s.rates.nightTour || 2000;
-          document.getElementById('setRateOvernight').value = s.rates.overnight || 3500;
+          currentRates = s.rates;
+          document.getElementById('setRateDay').value = s.rates.dayTour;
+          document.getElementById('setRateNight').value = s.rates.nightTour;
+          document.getElementById('setRateOvernight').value = s.rates.overnight;
         }
+        updateStats(globalBookings);
       });
     }
 
@@ -325,7 +306,7 @@
         grid.innerHTML = images.map(img => `
           <div class="slider-card">
             <img src="/slider-images/${img}">
-            <button class="btn-del-img" onclick="deleteSlider('${img}')">🗑️ Delete</button>
+            <button class="btn-del-img" onclick="deleteSlider('${img}')">🗑️</button>
           </div>
         `).join('');
       });
@@ -340,20 +321,16 @@
       fetch('/api/facilities').then(r => r.json()).then(items => {
         const grid = document.getElementById('facilityImagesGrid');
         if (!items || !items.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No facility media uploaded yet.</p>'; return; }
-
+        
         grid.innerHTML = items.map(item => {
           const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
-          const mediaTag = isVid 
-            ? `<video src="/facility-images/${item.filename}"></video>` 
-            : `<img src="/facility-images/${item.filename}">`;
-
+          const mediaTag = isVid ? `<video src="/facility-images/${item.filename}"></video>` : `<img src="/facility-images/${item.filename}">`;
+          
           return `
             <div class="slider-card">
               ${mediaTag}
-              <div style="font-size:0.75rem; padding:3px; background:#fff; color:#333; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
-                ${isVid ? '🎥' : '🖼️'} ${item.title}
-              </div>
-              <button class="btn-del-img" onclick="deleteFacility('${item.id}')">🗑️ Delete</button>
+              <div style="font-size:0.7rem; padding:2px; background:#fff; color:#333; text-align:center; overflow:hidden; white-space:nowrap;">${item.title}</div>
+              <button class="btn-del-img" onclick="deleteFacility('${item.id}')">🗑️</button>
             </div>
           `;
         }).join('');
@@ -361,7 +338,7 @@
     }
 
     function deleteFacility(id) {
-      if(!confirm("Delete this facility media?")) return;
+      if(!confirm("Delete this media?")) return;
       fetch(`/api/facilities/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadFacilityAdmin());
     }
 
@@ -371,7 +348,7 @@
         if (!reviews || !reviews.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No reviews yet.</td></tr>'; return; }
         tbody.innerHTML = reviews.map(r => `
           <tr>
-            <td><small style="color:#777;">${r.date}</small></td>
+            <td><small>${r.date}</small></td>
             <td><strong>${r.name}</strong></td>
             <td><span style="color:#f39c12;">${'⭐'.repeat(r.rating)}</span></td>
             <td>${r.comment}</td>
@@ -396,44 +373,46 @@
     }
 
     function updateStats(bookings) {
-      const approvedCount = bookings.filter(b => b.status === 'APPROVED').length;
+      const approvedList = bookings.filter(b => b.status === 'APPROVED');
       const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
 
-      document.getElementById('statTotalBookings').innerText = approvedCount;
+      let totalRev = 0;
+      approvedList.forEach(b => {
+        if (b.stayType.includes('Night')) totalRev += currentRates.nightTour;
+        else if (b.stayType.includes('22-Hour') || b.stayType.includes('Exclusive')) totalRev += currentRates.overnight;
+        else totalRev += currentRates.dayTour;
+      });
+
+      document.getElementById('statRevenue').innerText = `₱${totalRev.toLocaleString()}`;
+      document.getElementById('statTotalBookings').innerText = approvedList.length;
       document.getElementById('statPendingBookings').innerText = pendingCount;
     }
 
     function filterBookings() {
       const query = document.getElementById('searchBookingInput').value.toLowerCase();
       const statusFilter = document.getElementById('statusFilterSelect').value;
-
+      
       const filtered = globalBookings.filter(b => {
         const matchQuery = b.name.toLowerCase().includes(query) || b.phone.includes(query) || b.checkInDate.includes(query);
         const matchStatus = statusFilter === 'ALL' || b.status === statusFilter;
         return matchQuery && matchStatus;
       });
-
+      
       renderBookingsTable(filtered);
     }
 
     function renderBookingsTable(bookings) {
       const tbody = document.getElementById('bookingsTableBody');
       if (!bookings || !bookings.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booking requests found.</td></tr>'; return; }
-
+      
       tbody.innerHTML = bookings.map(b => {
         let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
         if (b.status === 'APPROVED') statusBadge = `<span class="badge badge-approved">APPROVED</span>`;
         if (b.status === 'REJECTED') statusBadge = `<span class="badge badge-rejected">REJECTED</span>`;
 
-        let actionBtns = '';
-        if (b.status === 'PENDING') {
-          actionBtns = `
-            <button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button>
-            <button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>
-          `;
-        } else {
-          actionBtns = `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
-        }
+        let actionBtns = b.status === 'PENDING' 
+          ? `<button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button><button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>`
+          : `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
 
         return `
           <tr>
