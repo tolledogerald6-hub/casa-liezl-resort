@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 4000;
 const ADMIN_USER = "ADMIN";
 const ADMIN_PASS = "LIEZL2026!";
 
+// 📧 EMAIL CONFIGURATION (AUTO-SEND GMAIL)
 const RESORT_EMAIL = "tolledogerald6@gmail.com";
 const GMAIL_APP_PASS = process.env.GMAIL_APP_PASS || "xtds hcbx rdrv vjbt";
 
@@ -20,7 +21,9 @@ const transporter = nodemailer.createTransport({
   auth: { user: RESORT_EMAIL, pass: GMAIL_APP_PASS }
 });
 
+// 🔒 MULTI-DEVICE ADMIN SESSIONS
 let activeSessions = new Set();
+
 const dbFile = path.join(__dirname, 'resort_db.json');
 const uploadFolder = path.join(__dirname, 'public', 'uploads');
 const sliderFolder = path.join(__dirname, 'public', 'uploads', 'slider');
@@ -49,10 +52,13 @@ app.use(express.static('public'));
 app.use('/slider-images', express.static(sliderFolder));
 app.use('/facility-images', express.static(facilityFolder));
 
+// 🔒 MULTI-DEVICE AUTH MIDDLEWARE
 function authAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  if (!token || !activeSessions.has(token)) return res.status(401).json({ success: false, message: "Unauthorized Admin Access!" });
+  if (!token || !activeSessions.has(token)) {
+    return res.status(401).json({ success: false, message: "Unauthorized Admin Access!" });
+  }
   next();
 }
 
@@ -78,15 +84,26 @@ function loadDB() {
   return data;
 }
 
-function saveDB(data) { fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); }
+function saveDB(data) { 
+  fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); 
+}
 
+// 📧 AUTO SEND GMAIL NOTIFICATION FUNCTION
 function sendEmailNotification(subject, text) {
-  transporter.sendMail({ from: `"Casa Liezl Resort System" <${RESORT_EMAIL}>`, to: RESORT_EMAIL, subject, text }, (err, info) => {
-    if (err) console.log("Email Error:", err.message);
+  const mailOptions = {
+    from: `"Casa Liezl Resort System" <${RESORT_EMAIL}>`,
+    to: RESORT_EMAIL,
+    subject: subject,
+    text: text
+  };
+
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) console.log("Email Notification Error:", err.message);
+    else console.log("Email Sent Successfully:", info.response);
   });
 }
 
-// SETTINGS
+// SETTINGS API
 app.get('/api/settings', (req, res) => {
   const db = loadDB();
   res.json({ gcashName: db.gcashName, gcashNumber: db.gcashNumber, rates: db.rates });
@@ -148,7 +165,7 @@ app.get('/api/download-voucher/:id', (req, res) => {
   doc.end();
 });
 
-// REVIEWS
+// REVIEWS APIS
 app.get('/api/reviews', (req, res) => res.json(loadDB().reviews || []));
 
 app.post('/api/reviews', (req, res) => {
@@ -225,7 +242,7 @@ app.delete('/api/sliders/:name', authAdmin, (req, res) => {
   res.json({ success: true });
 });
 
-// BOOKING SUBMISSION API
+// BOOKING SUBMISSION API (AUTO-SENDS EMAIL TO YOU)
 app.post('/api/book', (req, res) => {
   const { name, phone, checkInDate, stayType, packageType, guests, notes, gcashRef } = req.body;
   if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success: false, message: "Please complete all required fields!" });
@@ -252,19 +269,34 @@ app.post('/api/book', (req, res) => {
   db.bookings.unshift(bookingObj);
   saveDB(db);
 
-  sendEmailNotification(`[CASA LIEZL] New Booking Request from ${bookingObj.name}`, 
-    `Name: ${bookingObj.name}\nPhone: ${bookingObj.phone}\nDate: ${bookingObj.checkInDate}\nPackage: ${bookingObj.packageType}\nGCash Ref: ${bookingObj.gcashRef}`
-  );
+  // AUTO SEND EMAIL NOTIFICATION TO tolledogerald6@gmail.com
+  const emailContent = 
+    `🌴 BAGONG BOOKING REQUEST - CASA LIEZL RESORT 🌴\n\n` +
+    `Name: ${bookingObj.name}\n` +
+    `Phone: ${bookingObj.phone}\n` +
+    `Check-in Date: ${bookingObj.checkInDate} (${bookingObj.stayType})\n` +
+    `Package: ${bookingObj.packageType} (${bookingObj.guests} Pax)\n` +
+    `GCash Reference No: ${bookingObj.gcashRef}\n` +
+    `Notes: ${bookingObj.notes || 'Wala'}\n\n` +
+    `Pakicheck ang Admin Panel para ma-verify ang GCash deposit!`;
+
+  sendEmailNotification(`[CASA LIEZL] New Booking Request from ${bookingObj.name}`, emailContent);
 
   res.json({ success: true, message: "Reservation request submitted successfully!", bookingId: bookingObj.id });
 });
 
-// ADMIN APIS
+// ADMIN APIS (MULTI-DEVICE LOGIN)
 app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   if ((username || '').trim().toUpperCase() === ADMIN_USER && (password || '').trim() === ADMIN_PASS) {
     const token = crypto.randomBytes(32).toString('hex');
-    activeSessions.add(token);
+    activeSessions.add(token); // Pinapayagan ang multi-device concurrent login
+
+    if (activeSessions.size > 50) {
+      const firstToken = activeSessions.values().next().value;
+      activeSessions.delete(firstToken);
+    }
+
     res.json({ success: true, token });
   } else {
     res.status(401).json({ success: false, message: "Invalid Username or Password!" });
@@ -283,7 +315,13 @@ app.post('/api/admin/process-booking', authAdmin, (req, res) => {
   else if (action === 'REJECT') target.status = 'REJECTED';
 
   saveDB(db);
-  sendEmailNotification(`[CASA LIEZL] Booking ${target.status}: ${target.name}`, `Reservation for ${target.name} on ${target.checkInDate} status updated to: ${target.status}`);
+
+  // AUTO SEND EMAIL NOTIFICATION WHEN STATUS CHANGES
+  sendEmailNotification(
+    `[CASA LIEZL] Booking ${target.status}: ${target.name}`,
+    `Ang reservation ni ${target.name} para sa petsang ${target.checkInDate} ay na-update ang status sa: ${target.status}`
+  );
+
   res.json({ success: true, status: target.status });
 });
 
