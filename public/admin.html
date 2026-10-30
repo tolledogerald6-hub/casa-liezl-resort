@@ -34,6 +34,12 @@
       padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
     }
 
+    /* REVENUE SUMMARY CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
+    .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
+    .stat-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
+    .stat-card .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--primary-dark); }
+
     #loginOverlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0,0,0,0.7); display: flex; justify-content: center;
@@ -76,6 +82,11 @@
     .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
     .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
 
+    /* SEARCH & FILTER CONTROLS */
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; }
+    .filter-bar input { flex-grow: 1; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
     th { background: #e6f2f2; color: var(--primary-dark); }
@@ -108,6 +119,18 @@
     <div class="header">
       <h2>🌴 Casa Liezl Resort - Admin Dashboard</h2>
       <button class="btn-logout" onclick="logoutAdmin()">LOGOUT</button>
+    </div>
+
+    <!-- 📊 REVENUE & STATS TRACKER -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h4>💰 Total Approved Bookings</h4>
+        <div class="stat-value" id="statTotalBookings">0</div>
+      </div>
+      <div class="stat-card" style="border-left-color: var(--warning);">
+        <h4>⏳ Pending Approvals</h4>
+        <div class="stat-value" id="statPendingBookings">0</div>
+      </div>
     </div>
 
     <!-- ⚙️ GCASH & RATES SETTINGS -->
@@ -170,6 +193,18 @@
     <!-- 📋 BOOKINGS -->
     <div class="section-box">
       <h3>📋 Listahan ng mga Reservations</h3>
+      
+      <!-- SEARCH & FILTER BAR -->
+      <div class="filter-bar">
+        <input type="text" id="searchBookingInput" placeholder="🔍 Maghanap sa pangalan o phone number..." oninput="filterBookings()">
+        <select id="statusFilterSelect" onchange="filterBookings()">
+          <option value="ALL">Lahat ng Status</option>
+          <option value="PENDING">Pending</option>
+          <option value="APPROVED">Approved</option>
+          <option value="REJECTED">Rejected</option>
+        </select>
+      </div>
+
       <div style="overflow-x: auto;">
         <table>
           <thead>
@@ -214,6 +249,8 @@
 
   <script>
     let authToken = localStorage.getItem('resortAdminToken') || "";
+    let globalBookings = [];
+
     if (authToken) { showDashboard(); }
 
     function loginAdmin(e) {
@@ -352,37 +389,64 @@
     function loadBookings() {
       fetch('/api/admin/bookings', { headers: { 'Authorization': `Bearer ${authToken}` } })
       .then(r => r.json()).then(bookings => {
-        const tbody = document.getElementById('bookingsTableBody');
-        if (!bookings || !bookings.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booking requests yet.</td></tr>'; return; }
-
-        tbody.innerHTML = bookings.map(b => {
-          let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
-          if (b.status === 'APPROVED') statusBadge = `<span class="badge badge-approved">APPROVED</span>`;
-          if (b.status === 'REJECTED') statusBadge = `<span class="badge badge-rejected">REJECTED</span>`;
-
-          let actionBtns = '';
-          if (b.status === 'PENDING') {
-            actionBtns = `
-              <button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button>
-              <button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>
-            `;
-          } else {
-            actionBtns = `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
-          }
-
-          return `
-            <tr>
-              <td><strong>${b.name}</strong><br><small style="color:#777;">${b.createdAt}</small></td>
-              <td>${b.phone}</td>
-              <td><strong>${b.checkInDate}</strong><br><small>${b.stayType}</small></td>
-              <td>${b.packageType}<br><small>(${b.guests} Guests)</small></td>
-              <td><strong style="color:var(--primary);">${b.gcashRef}</strong></td>
-              <td>${statusBadge}</td>
-              <td>${actionBtns}</td>
-            </tr>
-          `;
-        }).join('');
+        globalBookings = bookings || [];
+        updateStats(globalBookings);
+        renderBookingsTable(globalBookings);
       });
+    }
+
+    function updateStats(bookings) {
+      const approvedCount = bookings.filter(b => b.status === 'APPROVED').length;
+      const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
+
+      document.getElementById('statTotalBookings').innerText = approvedCount;
+      document.getElementById('statPendingBookings').innerText = pendingCount;
+    }
+
+    function filterBookings() {
+      const query = document.getElementById('searchBookingInput').value.toLowerCase();
+      const statusFilter = document.getElementById('statusFilterSelect').value;
+
+      const filtered = globalBookings.filter(b => {
+        const matchQuery = b.name.toLowerCase().includes(query) || b.phone.includes(query) || b.checkInDate.includes(query);
+        const matchStatus = statusFilter === 'ALL' || b.status === statusFilter;
+        return matchQuery && matchStatus;
+      });
+
+      renderBookingsTable(filtered);
+    }
+
+    function renderBookingsTable(bookings) {
+      const tbody = document.getElementById('bookingsTableBody');
+      if (!bookings || !bookings.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booking requests found.</td></tr>'; return; }
+
+      tbody.innerHTML = bookings.map(b => {
+        let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
+        if (b.status === 'APPROVED') statusBadge = `<span class="badge badge-approved">APPROVED</span>`;
+        if (b.status === 'REJECTED') statusBadge = `<span class="badge badge-rejected">REJECTED</span>`;
+
+        let actionBtns = '';
+        if (b.status === 'PENDING') {
+          actionBtns = `
+            <button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button>
+            <button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>
+          `;
+        } else {
+          actionBtns = `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
+        }
+
+        return `
+          <tr>
+            <td><strong>${b.name}</strong><br><small style="color:#777;">${b.createdAt}</small></td>
+            <td>${b.phone}</td>
+            <td><strong>${b.checkInDate}</strong><br><small>${b.stayType}</small></td>
+            <td>${b.packageType}<br><small>(${b.guests} Guests)</small></td>
+            <td><strong style="color:var(--primary);">${b.gcashRef}</strong></td>
+            <td>${statusBadge}</td>
+            <td>${actionBtns}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function processBooking(id, action) {
