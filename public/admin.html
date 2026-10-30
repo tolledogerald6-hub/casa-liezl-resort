@@ -64,7 +64,7 @@
     }
     .section-box h3 { color: var(--primary-dark); margin-bottom: 12px; }
 
-    .slider-upload-form { display: flex; gap: 10px; margin-bottom: 15px; }
+    .upload-form-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
 
     .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
@@ -78,7 +78,7 @@
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
-    .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
 
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
@@ -146,15 +146,31 @@
       </form>
     </div>
 
-    <!-- 📸 SLIDER IMAGES MANAGEMENT -->
+    <!-- 📸 HERO SLIDER IMAGES -->
     <div class="section-box">
       <h3>📸 Upload Resort Slide Pictures (Homepage Banner)</h3>
-      <form action="/upload-slider" method="POST" enctype="multipart/form-data" class="slider-upload-form">
+      <form action="/upload-slider" method="POST" enctype="multipart/form-data" class="upload-form-row">
         <input type="file" name="sliderImage" accept="image/*" required style="padding: 5px;">
-        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD PICTURE</button>
+        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD BANNER PICTURE</button>
       </form>
-      
       <div class="slider-grid" id="sliderImagesGrid"></div>
+    </div>
+
+    <!-- 🏊‍♂️ FACILITIES GALLERY MANAGEMENT (NEW) -->
+    <div class="section-box">
+      <h3>🏞️ Upload Resort Facilities & Tour Photos</h3>
+      <form action="/upload-facility" method="POST" enctype="multipart/form-data" class="upload-form-row">
+        <input type="file" name="facilityImage" accept="image/*" required style="padding: 5px;">
+        <input type="text" name="facilityTitle" placeholder="Photo Label (e.g. Adult Pool)" required style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
+        <select name="facilityCategory" required style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
+          <option value="pools">🏊‍♂️ Swimming Pools</option>
+          <option value="rooms">🛏️ Aircon Rooms</option>
+          <option value="cottages">🏡 Cottages & Gazebo</option>
+          <option value="night">🌙 Night View</option>
+        </select>
+        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD TO GALLERY</button>
+      </form>
+      <div class="slider-grid" id="facilityImagesGrid"></div>
     </div>
 
     <!-- 📋 BOOKINGS MANAGEMENT -->
@@ -240,6 +256,7 @@
       loadSettings();
       loadBookings();
       loadSliderAdmin();
+      loadFacilityAdmin();
       loadAdminReviews();
       setInterval(loadBookings, 5000);
     }
@@ -258,7 +275,6 @@
         });
     }
 
-    // FIX: ADDED AUTHORIZATION BEARER HEADER TO SAVE SETTINGS
     function saveSettings(e) {
       e.preventDefault();
       const payload = {
@@ -279,18 +295,15 @@
       })
       .then(r => r.json())
       .then(d => {
-        alert(d.message || "Settings successfully updated!");
+        alert(d.message || "Settings updated!");
         loadSettings();
-      })
-      .catch(err => {
-        alert("Failed to save settings. Please check your admin login.");
       });
     }
 
     function loadSliderAdmin() {
       fetch('/api/sliders').then(r => r.json()).then(images => {
         const grid = document.getElementById('sliderImagesGrid');
-        if (!images || !images.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">Wala pang na-upload na picture.</p>'; return; }
+        if (!images || !images.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No banner pictures uploaded yet.</p>'; return; }
         
         grid.innerHTML = images.map(img => `
           <div class="slider-card">
@@ -302,18 +315,42 @@
     }
 
     function deleteSlider(filename) {
-      if(!confirm("Sigurado ka bang buburahin ang larawang ito?")) return;
+      if(!confirm("Are you sure you want to delete this image?")) return;
       fetch(`/api/sliders/${filename}`, { 
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${authToken}` }
       }).then(() => loadSliderAdmin());
     }
 
+    // LOAD & DELETE FACILITIES GALLERY PHOTOS
+    function loadFacilityAdmin() {
+      fetch('/api/facilities').then(r => r.json()).then(items => {
+        const grid = document.getElementById('facilityImagesGrid');
+        if (!items || !items.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No facility photos uploaded yet.</p>'; return; }
+
+        grid.innerHTML = items.map(item => `
+          <div class="slider-card">
+            <img src="/facility-images/${item.filename}">
+            <div style="font-size:0.75rem; padding:3px; background:#eee; text-align:center;">${item.title}</div>
+            <button class="btn-del-img" onclick="deleteFacility('${item.id}')">🗑️ Delete</button>
+          </div>
+        `).join('');
+      });
+    }
+
+    function deleteFacility(id) {
+      if(!confirm("Are you sure you want to delete this facility photo?")) return;
+      fetch(`/api/facilities/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).then(() => loadFacilityAdmin());
+    }
+
     function loadAdminReviews() {
       fetch('/api/reviews').then(r => r.json()).then(reviews => {
         const tbody = document.getElementById('reviewsTableBody');
         if (!reviews || !reviews.length) {
-          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Wala pang reviews.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No reviews yet.</td></tr>';
           return;
         }
 
@@ -330,14 +367,13 @@
     }
 
     function deleteReview(id) {
-      if(!confirm("Sigurado ka bang buburahin ang review na ito?")) return;
+      if(!confirm("Are you sure you want to delete this review?")) return;
       fetch(`/api/reviews/${id}`, { 
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${authToken}` }
       }).then(() => loadAdminReviews());
     }
 
-    // FIX: ADDED AUTHORIZATION BEARER HEADER TO FETCH BOOKINGS
     function loadBookings() {
       fetch('/api/admin/bookings', {
         headers: { 'Authorization': `Bearer ${authToken}` }
@@ -346,7 +382,7 @@
       .then(bookings => {
         const tbody = document.getElementById('bookingsTableBody');
         if (!bookings || !bookings.length) {
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Wala pang booking requests.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booking requests yet.</td></tr>';
           return;
         }
 
@@ -380,9 +416,8 @@
       });
     }
 
-    // FIX: ADDED AUTHORIZATION BEARER HEADER TO PROCESS BOOKINGS
     function processBooking(id, action) {
-      if (!confirm(`Sigurado ka bang gusto mong i-${action} ang booking na ito?`)) return;
+      if (!confirm(`Are you sure you want to ${action} this booking?`)) return;
 
       fetch('/api/admin/process-booking', {
         method: 'POST',
