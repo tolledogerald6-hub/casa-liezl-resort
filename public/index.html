@@ -4,20 +4,20 @@
   <!-- Open Graph / Social Media Share Preview Tags -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://casaliezlresort.online/">
-  <meta property="og:title" content="CASA LIEZL RESORT - Tropical Paradise & Relaxation">
-  <meta property="og:description" content="Book your staycation, family get-togethers, and pool parties at Casa Liezl Resort. Check available dates and reserve online!">
-  <meta property="og:image" content="https://casaliezlresort.online/slider-images/PALITAN_MO_NG_TOTOONG_FILENAME_NG_LITRATO.jpg">
+  <meta property="og:title" content="CASA LIEZL PRIVATE RESORT - Tropical Paradise & Relaxation">
+  <meta property="og:description" content="Book your 22-hours staycation, family get-togethers, and pool parties at Casa Liezl Private Resort. Reserve online now!">
+  <meta property="og:image" content="https://casaliezlresort.online/slider-images/banner1.jpg">
 
   <!-- Twitter Card Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://casaliezlresort.online/">
-  <meta name="twitter:title" content="CASA LIEZL RESORT - Tropical Paradise & Relaxation">
-  <meta name="twitter:description" content="Book your staycation, family get-togethers, and pool parties at Casa Liezl Resort.">
-  <meta name="twitter:image" content="https://casaliezlresort.online/slider-images/PALITAN_MO_NG_TOTOONG_FILENAME_NG_LITRATO.jpg">
+  <meta name="twitter:title" content="CASA LIEZL PRIVATE RESORT - Tropical Paradise & Relaxation">
+  <meta name="twitter:description" content="Book your 22-hours staycation and private events at Casa Liezl Private Resort.">
+  <meta name="twitter:image" content="https://casaliezlresort.online/slider-images/banner1.jpg">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CASA LIEZL RESORT - Tropical Paradise & Relaxation</title>
+  <title>CASA LIEZL PRIVATE RESORT - Tropical Paradise & Relaxation</title>
   <style>
     :root {
       --primary: #008080;
@@ -40,7 +40,7 @@
       background: rgba(0, 77, 77, 0.95); padding: 15px 30px;
       position: sticky; top: 0; z-index: 900; box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
-    .navbar .logo { color: #fff; font-size: 1.6rem; font-weight: 800; }
+    .navbar .logo { color: #fff; font-size: 1.5rem; font-weight: 800; }
     .navbar .logo span { color: var(--accent); }
 
     .nav-actions { display: flex; gap: 10px; align-items: center; }
@@ -67,8 +67,8 @@
       align-items: center; text-align: center; color: #fff; padding: 20px;
       pointer-events: none;
     }
-    .hero-overlay h1 { font-size: 3rem; margin-bottom: 10px; }
-    .hero-overlay p { font-size: 1.2rem; max-width: 600px; margin-bottom: 25px; }
+    .hero-overlay h1 { font-size: 2.8rem; margin-bottom: 10px; }
+    .hero-overlay p { font-size: 1.1rem; max-width: 600px; margin-bottom: 25px; }
     .hero-overlay button { pointer-events: auto; }
 
     .nav-arrow {
@@ -93,7 +93,7 @@
     .feature-card { background: var(--card-bg); border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); text-align: center; }
     .feature-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; }
 
-    /* ☀️ WEATHER WIDGET STYLES */
+    /* WEATHER WIDGET */
     .weather-card {
       background: linear-gradient(135deg, #e0f2fe, #bae6fd); border: 1px solid #7dd3fc;
       border-radius: 12px; padding: 15px 25px; display: flex; align-items: center;
@@ -103,111 +103,57 @@
     .weather-temp { font-size: 2rem; font-weight: bold; color: var(--primary-dark); }
     .weather-badge { background: var(--accent); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
-    /* 🏞️ MANUAL HORIZONTAL SCROLL GALLERY (IMAGES & VIDEOS) */
-    .gallery-carousel-wrapper {
-      position: relative;
-      margin-bottom: 50px;
-    }
-
+    /* GALLERY CAROUSEL */
+    .gallery-carousel-wrapper { position: relative; margin-bottom: 50px; }
     .gallery-scroll-container {
-      display: flex;
-      gap: 18px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      padding: 10px 5px 20px 5px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: thin;
-      scrollbar-color: var(--primary) transparent;
+      display: flex; gap: 18px; overflow-x: auto; scroll-behavior: smooth;
+      padding: 10px 5px 20px 5px; -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin; scrollbar-color: var(--primary) transparent;
     }
-
     .gallery-scroll-container::-webkit-scrollbar { height: 8px; }
     .gallery-scroll-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
 
     .gallery-card {
-      flex: 0 0 280px;
-      height: 360px;
-      background: var(--card-bg);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-      border: 1px solid var(--border);
-      position: relative;
-      display: flex;
-      flex-direction: column;
+      flex: 0 0 280px; height: 360px; background: var(--card-bg); border-radius: 12px;
+      overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid var(--border);
+      position: relative; display: flex; flex-direction: column;
     }
-
-    .gallery-media-box {
-      width: 100%;
-      height: 290px;
-      background: #000;
-      position: relative;
-    }
-
-    .gallery-media-box img, .gallery-media-box video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
+    .gallery-media-box { width: 100%; height: 290px; background: #000; position: relative; }
+    .gallery-media-box img, .gallery-media-box video { width: 100%; height: 100%; object-fit: cover; }
     .gallery-card-caption {
-      padding: 12px;
-      font-weight: bold;
-      color: var(--primary-dark);
-      font-size: 0.9rem;
-      text-align: center;
-      background: #fff;
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 12px; font-weight: bold; color: var(--primary-dark); font-size: 0.9rem;
+      text-align: center; background: #fff; flex-grow: 1; display: flex; align-items: center; justify-content: center;
     }
-
     .gallery-nav-btn {
-      position: absolute;
-      top: 40%;
-      transform: translateY(-50%);
-      background: rgba(0, 77, 77, 0.85);
-      color: #fff;
-      border: none;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-      z-index: 10;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      position: absolute; top: 40%; transform: translateY(-50%);
+      background: rgba(0, 77, 77, 0.85); color: #fff; border: none; width: 42px; height: 42px;
+      border-radius: 50%; cursor: pointer; font-size: 1.2rem; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     .gallery-nav-btn.left { left: -15px; }
     .gallery-nav-btn.right { right: -15px; }
 
-    /* ❓ FAQ STYLES */
+    /* FAQ */
     .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
-    .faq-item {
-      background: var(--card-bg); border: 1px solid var(--border);
-      border-radius: 8px; margin-bottom: 12px; overflow: hidden;
-    }
+    .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
     .faq-question {
       padding: 16px 20px; background: #fff; font-weight: bold; color: var(--primary-dark);
-      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-      user-select: none; font-size: 1rem;
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 1rem;
     }
     .faq-answer {
-      padding: 0 20px; max-height: 0; overflow: hidden;
-      transition: max-height 0.3s ease, padding 0.3s ease; color: #555; font-size: 0.93rem;
+      padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; color: #555; font-size: 0.93rem;
     }
     .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
 
-    /* 💵 RATES STYLES */
+    /* RATES */
     .rates-card {
       background: linear-gradient(135deg, #008080, #004d4d); color: #fff;
-      padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 50px;
-      box-shadow: 0 6px 20px rgba(0,128,128,0.25);
+      padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 50px; box-shadow: 0 6px 20px rgba(0,128,128,0.25);
     }
     .rates-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
     .rate-box { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); }
     .rate-price { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-top: 5px; }
 
-    /* 🗓️ CALENDAR STYLES */
+    /* CALENDAR */
     .calendar-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .calendar-header button { background: var(--primary); color: #fff; border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -223,32 +169,22 @@
     .cal-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
     .legend-box { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
 
-    /* 🗺️ MAP STYLES */
+    /* MAP & REVIEWS */
     .map-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
     .map-actions { display: flex; gap: 12px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
     .btn-map { padding: 10px 20px; border-radius: 25px; font-weight: bold; text-decoration: none; color: #fff; display: inline-flex; align-items: center; gap: 8px; }
 
-    /* REVIEWS STYLES */
     .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 40px; }
-    .review-card {
-      background: var(--card-bg); padding: 20px; border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid var(--accent);
-    }
+    .review-card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
     .review-stars { color: #f39c12; font-size: 1.1rem; margin-bottom: 8px; }
     .review-name { font-weight: bold; color: var(--primary-dark); font-size: 0.95rem; }
     .review-date { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
     .review-comment { font-size: 0.9rem; color: #555; }
-
-    .add-review-box {
-      background: var(--card-bg); padding: 25px; border-radius: 12px;
-      border: 1px solid var(--border); max-width: 600px; margin: 0 auto;
-    }
+    .add-review-box { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
 
     .floating-book-btn {
-      position: fixed; bottom: 30px; right: 30px; background: var(--accent);
-      color: #fff; border: none; padding: 15px 25px; border-radius: 50px;
-      font-size: 1.1rem; font-weight: bold; cursor: pointer;
-      box-shadow: 0 6px 20px rgba(255,127,80,0.5); z-index: 999;
+      position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: #fff; border: none;
+      padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(255,127,80,0.5); z-index: 999;
     }
 
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
@@ -260,12 +196,10 @@
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .payment-box { background: #e6f2f2; border: 1px dashed var(--primary); padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; }
     .btn-submit { width: 100%; background: var(--accent); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-
     .date-warning { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; font-weight: bold; }
 
     footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 25px 10px; margin-top: 50px; }
 
-    /* 📱 MOBILE SPECIFIC OPTIMIZATIONS */
     @media (max-width: 768px) {
       .hero-overlay h1 { font-size: 2rem; }
       .hero-overlay p { font-size: 1rem; }
@@ -278,7 +212,7 @@
 <body>
 
   <div class="navbar">
-    <div class="logo">CASA <span>LIEZL</span> RESORT</div>
+    <div class="logo">CASA <span>LIEZL</span> PRIVATE RESORT</div>
     <div class="nav-actions">
       <button class="btn-nav btn-admin-nav" onclick="openAdminLoginModal()">🔐 Admin Panel</button>
       <button class="btn-nav btn-book-nav" onclick="openBookingModal()">📅 BOOK NOW</button>
@@ -290,25 +224,24 @@
     <button class="nav-arrow right" onclick="nextSlide()">&gt;</button>
 
     <div class="slide-track" id="slideTrack">
-      <img src="https://placehold.co/1200x600/008080/ffffff?text=WELCOME+TO+CASA+LIEZL+RESORT" class="slide-img" alt="Resort Image">
+      <img src="https://placehold.co/1200x600/008080/ffffff?text=WELCOME+TO+CASA+LIEZL+PRIVATE+RESORT" class="slide-img" alt="Resort Image">
     </div>
     <div class="slider-dots" id="sliderDots"></div>
 
     <div class="hero-overlay">
       <h1>Relax, Refresh, & Reconnect</h1>
-      <p>The perfect venue for your family get-togethers, barkada outings, and private events.</p>
+      <p>The ultimate private sanctuary for your family get-togethers, barkada outings, and exclusive events.</p>
       <button class="btn-nav btn-book-nav" style="font-size: 1.1rem; padding: 12px 30px;" onclick="openBookingModal()">RESERVE YOUR DATE</button>
     </div>
   </div>
 
   <div class="container">
 
-    <!-- ☀️ WEATHER WIDGET -->
     <div class="weather-card">
       <div class="weather-info">
         <span style="font-size: 2.2rem;">☀️</span>
         <div>
-          <div style="font-size: 0.85rem; color: #555; font-weight: bold;">CASA LIEZL RESORT WEATHER</div>
+          <div style="font-size: 0.85rem; color: #555; font-weight: bold;">CASA LIEZL PRIVATE RESORT WEATHER</div>
           <div class="weather-temp">31°C Sunny</div>
         </div>
       </div>
@@ -317,31 +250,30 @@
 
     <div class="section-title">
       <h2>🌴 Our Resort Amenities</h2>
-      <p>Experience fresh pool water and comfortable facilities here at Casa Liezl Resort.</p>
+      <p>Experience crystal clear private pools and comfortable facilities at Casa Liezl Private Resort.</p>
     </div>
 
     <div class="grid-3">
       <div class="feature-card">
         <span class="feature-icon">🏊‍♂️</span>
         <h3>Crystal Clear Pools</h3>
-        <p>Clean and refreshed Adult & Kiddie pools suitable for the whole family.</p>
+        <p>Clean and refreshed Adult & Kiddie pools suitable for exclusive family bonding.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🏡</span>
         <h3>Cozy Rooms & Cottages</h3>
-        <p>Comfortable Aircon rooms and spacious open cottages for your staycation.</p>
+        <p>Comfortable Aircon rooms and spacious open cottages for your private staycation.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🎉</span>
         <h3>Private Exclusive Rental</h3>
-        <p>Exclusive resort rental options for Birthdays, Reunions, and Private Gatherings.</p>
+        <p>Total privacy for your Birthdays, Reunions, and Special Gatherings.</p>
       </div>
     </div>
 
-    <!-- 📸 MANUAL SCROLL RESORT FACILITIES (IMAGE & VIDEO) -->
     <div class="section-title">
       <h2>📸 Resort Facilities & Tour (Swipe / Scroll)</h2>
-      <p>Take a look at our resort pools, rooms, and video highlights below.</p>
+      <p>Take a look at our private pools, rooms, and video highlights below.</p>
     </div>
 
     <div class="gallery-carousel-wrapper">
@@ -352,10 +284,9 @@
       <button class="gallery-nav-btn right" onclick="scrollGallery(300)">&gt;</button>
     </div>
 
-    <!-- 💵 RATES DISPLAY -->
     <div class="rates-card">
       <h2 style="font-size: 1.8rem;">🏷️ Entrance & Rental Rates</h2>
-      <p style="font-size: 0.95rem; opacity: 0.9;">Updated pricing for your stay at Casa Liezl Resort</p>
+      <p style="font-size: 0.95rem; opacity: 0.9;">Updated pricing for your stay at Casa Liezl Private Resort</p>
       <div class="rates-grid">
         <div class="rate-box">
           <h4>☀️ Day Tour</h4>
@@ -368,14 +299,13 @@
           <div class="rate-price" id="rateNight">₱2,000</div>
         </div>
         <div class="rate-box">
-          <h4>🏡 24-Hour Overnight</h4>
-          <p style="font-size: 0.8rem;">Full Day & Night Stay</p>
+          <h4>🏡 22-Hour Exclusive Stay</h4>
+          <p style="font-size: 0.8rem;">Full Staycation Package</p>
           <div class="rate-price" id="rateOvernight">₱3,500</div>
         </div>
       </div>
     </div>
 
-    <!-- 🗓️ CALENDAR SECTION -->
     <div class="section-title">
       <h2>📅 Reservation Schedule Calendar</h2>
       <p>Check available dates before submitting your booking request.</p>
@@ -397,10 +327,9 @@
       </div>
     </div>
 
-    <!-- ❓ FAQ SECTION -->
     <div class="section-title">
       <h2>❓ Frequently Asked Questions (FAQ)</h2>
-      <p>Quick answers to common questions about Casa Liezl Resort.</p>
+      <p>Quick answers to common questions about Casa Liezl Private Resort.</p>
     </div>
 
     <div class="faq-container">
@@ -423,7 +352,7 @@
           Our standard shift schedules are:<br>
           • <strong>Day Tour:</strong> 8:00 AM to 5:00 PM<br>
           • <strong>Night Tour:</strong> 7:00 PM to 5:00 AM<br>
-          • <strong>24-Hour Overnight:</strong> Flexible 24-hour full stay staycation.
+          • <strong>22-Hour Exclusive Stay:</strong> Complete 22 hours private staycation package.
         </div>
       </div>
 
@@ -433,15 +362,14 @@
           <span style="transition:0.3s;">▼</span>
         </div>
         <div class="faq-answer">
-          After sending your GCash downpayment reference number, our resort team will verify your transaction and update your reservation status. You can also download your official PDF Voucher instantly!
+          After sending your GCash downpayment to our official account, our resort team will verify your transaction and update your reservation status instantly.
         </div>
       </div>
     </div>
 
-    <!-- 🗺️ GOOGLE MAPS SECTION -->
     <div class="section-title">
       <h2>📍 Resort Location & Navigation</h2>
-      <p>Visit Casa Liezl Resort easily. Tap the navigation links below for exact pin directions.</p>
+      <p>Visit Casa Liezl Private Resort easily. Tap the navigation links below for exact pin directions.</p>
     </div>
 
     <div class="map-wrapper">
@@ -453,10 +381,9 @@
       </div>
     </div>
 
-    <!-- 💬 REVIEWS SECTION -->
     <div class="section-title">
       <h2>⭐ Guest Reviews & Testimonials</h2>
-      <p>See what our guests say about their stay at Casa Liezl Resort.</p>
+      <p>See what our guests say about their stay at Casa Liezl Private Resort.</p>
     </div>
 
     <div class="reviews-grid" id="reviewsGrid"></div>
@@ -480,7 +407,7 @@
         </div>
         <div class="form-group">
           <label>Your Feedback / Comment</label>
-          <textarea id="revComment" rows="3" required placeholder="Share your staycation experience at Casa Liezl Resort..."></textarea>
+          <textarea id="revComment" rows="3" required placeholder="Share your staycation experience at Casa Liezl Private Resort..."></textarea>
         </div>
         <button type="submit" class="btn-submit" style="margin-top: 5px;">SUBMIT REVIEW</button>
       </form>
@@ -489,7 +416,6 @@
 
   <button class="floating-book-btn" onclick="openBookingModal()">📅 BOOK NOW</button>
 
-  <!-- 🎵 YOUTUBE PLAYMIX WIDGET -->
   <div id="youtubePlaymixWidget" style="position: fixed; bottom: 85px; right: 25px; background: rgba(0, 77, 77, 0.95); color: #fff; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 998; border: 1px solid rgba(255,255,255,0.2);">
     <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">▶</button>
     <span style="font-size: 0.85rem; font-weight: bold;">🌴 Summer Vibes</span>
@@ -501,7 +427,6 @@
     allow="autoplay">
   </iframe>
 
-  <!-- BOOKING MODAL -->
   <div id="bookingModal" class="modal-overlay">
     <div class="modal-box">
       <button class="close-modal-btn" onclick="closeModal('bookingModal')">&times;</button>
@@ -530,7 +455,7 @@
             <select id="stayType" required>
               <option value="Day Tour (8:00 AM - 5:00 PM)">Day Tour (8:00 AM - 5:00 PM)</option>
               <option value="Night Tour (7:00 PM - 5:00 AM)">Night Tour (7:00 PM - 5:00 AM)</option>
-              <option value="24 Hours Stay">24 Hours Overnight</option>
+              <option value="22-Hour Exclusive Stay">22-Hour Exclusive Stay</option>
             </select>
           </div>
         </div>
@@ -542,7 +467,7 @@
               <option value="Standard Cottage">Standard Cottage</option>
               <option value="Aircon Room (2-4 Pax)">Aircon Room (2-4 Pax)</option>
               <option value="Family Room (6-10 Pax)">Family Room (6-10 Pax)</option>
-              <option value="Exclusive Resort Rental">Private / Exclusive Resort Rental</option>
+              <option value="Private / Exclusive Resort Rental">Private / Exclusive Resort Rental</option>
             </select>
           </div>
           <div class="form-group">
@@ -558,8 +483,8 @@
 
         <div class="payment-box">
           <h4 style="color: var(--primary-dark); font-size: 0.9rem;">💙 GCASH DOWNPAYMENT DETAILS</h4>
-          <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">LIEZL RESORT</strong></p>
-          <p style="font-size: 0.9rem; color: var(--primary-dark);">GCASH NO: <strong id="dispGcashNum">09XX-XXX-XXXX</strong></p>
+          <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">SH***A I.</strong></p>
+          <p style="font-size: 0.9rem; color: var(--primary-dark);">GCASH NO: <strong id="dispGcashNum">09655247530</strong></p>
           <div class="form-group" style="margin-top: 8px; margin-bottom: 0;">
             <input type="text" id="gcashRef" required placeholder="Enter GCash Ref No. after sending payment">
           </div>
@@ -573,7 +498,7 @@
   <div id="adminLoginModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 380px;">
       <button class="close-modal-btn" onclick="closeModal('adminLoginModal')">&times;</button>
-      <h3 style="color: var(--primary); text-align: center; margin-bottom: 15px;">🔒 CASA LIEZL ADMIN LOGIN</h3>
+      <h3 style="color: var(--primary); text-align: center; margin-bottom: 15px;">🔒 ADMIN LOGIN</h3>
 
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
         <div class="form-group">
@@ -601,7 +526,7 @@
   </div>
 
   <footer>
-    <p>&copy; 2026 CASA LIEZL RESORT. All Rights Reserved.</p>
+    <p>&copy; 2026 CASA LIEZL PRIVATE RESORT. All Rights Reserved.</p>
   </footer>
 
   <script>
@@ -612,12 +537,10 @@
 
     function toggleFAQ(element) { element.classList.toggle('active'); }
 
-    // SCROLL FACILITIES CAROUSEL
     function scrollGallery(val) {
       document.getElementById('galleryContainer').scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // DYNAMIC FACILITIES GALLERY LOAD
     function loadFacilitiesGallery() {
       fetch('/api/facilities')
         .then(r => r.json())
@@ -646,10 +569,8 @@
         });
     }
 
-    // YOUTUBE PLAYMIX API BINDING
     let ytPlayer;
     let isPlaying = false;
-
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -695,8 +616,8 @@
 
     function loadSettings() {
       fetch('/api/settings').then(r => r.json()).then(s => {
-        document.getElementById('dispGcashName').innerText = s.gcashName || 'LIEZL RESORT';
-        document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09XX-XXX-XXXX';
+        document.getElementById('dispGcashName').innerText = s.gcashName || 'SH***A I.';
+        document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09655247530';
         if (s.rates) {
           document.getElementById('rateDay').innerText = `₱${s.rates.dayTour.toLocaleString()}`;
           document.getElementById('rateNight').innerText = `₱${s.rates.nightTour.toLocaleString()}`;
@@ -851,7 +772,7 @@
       e.preventDefault();
       const payload = {
         name: document.getElementById('custName').value,
-        phone: document.getElementById('custPhone').value,
+        phone: document.getElementById('custPhone'].value,
         checkInDate: document.getElementById('checkInDate').value,
         stayType: document.getElementById('stayType').value,
         packageType: document.getElementById('packageType').value,
