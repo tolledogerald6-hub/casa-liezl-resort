@@ -802,18 +802,19 @@
 
     let currentSlide = 0; let totalSlides = 0; let autoSlideTimer = null;
 
-    function initSlider() {
-      fetch('/api/sliders').then(r => r.json()).then(images => {
-        const track = document.getElementById('slideTrack');
-        const dots = document.getElementById('sliderDots');
-        if (images && images.length > 0) {
-          track.innerHTML = images.map(img => `<img src="${img}" class="slide-img" alt="Resort Image">`).join('');
-          dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
-          totalSlides = images.length;
-        } else { totalSlides = 1; }
-        startAutoSlide();
-      });
-    }
+    // Sa initSlider() ng index.html mo, siguraduhing ganito ang pagbasa:
+function initSlider() {
+  fetch('/api/sliders').then(r => r.json()).then(images => {
+    const track = document.getElementById('slideTrack');
+    const dots = document.getElementById('sliderDots');
+    if (images && images.length > 0) {
+      track.innerHTML = images.map(img => `<img src="${img}" class="slide-img" alt="Resort Image">`).join('');
+      dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
+      totalSlides = images.length;
+    } else { totalSlides = 1; }
+    startAutoSlide();
+  });
+}
 
     function goToSlide(i) {
       if (totalSlides <= 1) return;
