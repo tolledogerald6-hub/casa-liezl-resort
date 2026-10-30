@@ -191,7 +191,6 @@ app.post('/upload-facility', uploadFacility.single('facilityMedia'), (req, res) 
 
   const { facilityTitle, mediaType } = req.body;
   const db = loadDB();
-
   const isVideo = mediaType === 'video' || /\.(mp4|webm|mov)$/i.test(req.file.originalname);
 
   const newFacility = {
