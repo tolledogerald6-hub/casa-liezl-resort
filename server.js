@@ -43,6 +43,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use('/slider-images', express.static(sliderFolder));
 
+// 🔒 ADMIN AUTHENTICATION MIDDLEWARE
+function authAdmin(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token || !activeSessions.has(token)) {
+    return res.status(401).json({ success: false, message: "Unauthorized Admin Access!" });
+  }
+  next();
+}
+
 function loadDB() {
   if (!fs.existsSync(dbFile)) {
     const initialData = {
@@ -83,7 +94,7 @@ function sendEmailNotification(subject, text) {
   });
 }
 
-// ⚙️ GET & UPDATE RESORT SETTINGS (GCash & Rates)
+// ⚙️ GET RESORT SETTINGS (PUBLIC)
 app.get('/api/settings', (req, res) => {
   const db = loadDB();
   res.json({
@@ -93,19 +104,19 @@ app.get('/api/settings', (req, res) => {
   });
 });
 
-app.post('/api/admin/settings', (req, res) => {
+// ⚙️ UPDATE RESORT SETTINGS (ADMIN AUTH PROTECTED)
+app.post('/api/admin/settings', authAdmin, (req, res) => {
   const { gcashName, gcashNumber, dayTour, nightTour, overnight } = req.body;
   const db = loadDB();
 
-  if (gcashName) db.gcashName = gcashName.trim();
-  if (gcashNumber) db.gcashNumber = gcashNumber.trim();
-  if (dayTour || nightTour || overnight) {
-    db.rates = {
-      dayTour: parseInt(dayTour) || db.rates.dayTour,
-      nightTour: parseInt(nightTour) || db.rates.nightTour,
-      overnight: parseInt(overnight) || db.rates.overnight
-    };
-  }
+  if (gcashName !== undefined) db.gcashName = String(gcashName).trim();
+  if (gcashNumber !== undefined) db.gcashNumber = String(gcashNumber).trim();
+  
+  db.rates = {
+    dayTour: parseInt(dayTour) || db.rates.dayTour,
+    nightTour: parseInt(nightTour) || db.rates.nightTour,
+    overnight: parseInt(overnight) || db.rates.overnight
+  };
 
   saveDB(db);
   res.json({ success: true, message: "Settings updated successfully!" });
@@ -178,7 +189,7 @@ app.post('/api/reviews', (req, res) => {
   res.json({ success: true, message: "Salamat sa iyong review!" });
 });
 
-app.delete('/api/reviews/:id', (req, res) => {
+app.delete('/api/reviews/:id', authAdmin, (req, res) => {
   const db = loadDB();
   db.reviews = db.reviews.filter(r => r.id !== parseInt(req.params.id));
   saveDB(db);
@@ -202,7 +213,7 @@ app.get('/api/sliders', (req, res) => {
 
 app.post('/upload-slider', upload.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
 
-app.delete('/api/sliders/:name', (req, res) => {
+app.delete('/api/sliders/:name', authAdmin, (req, res) => {
   const filePath = path.join(sliderFolder, req.params.name);
   if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
   res.json({ success: true });
@@ -266,9 +277,9 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-app.get('/api/admin/bookings', (req, res) => res.json(loadDB().bookings || []));
+app.get('/api/admin/bookings', authAdmin, (req, res) => res.json(loadDB().bookings || []));
 
-app.post('/api/admin/process-booking', (req, res) => {
+app.post('/api/admin/process-booking', authAdmin, (req, res) => {
   const { id, action } = req.body;
   const db = loadDB();
   const target = db.bookings.find(b => b.id === parseInt(id));
