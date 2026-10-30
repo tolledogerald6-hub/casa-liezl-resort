@@ -17,75 +17,48 @@
       --danger: #dc3545;
       --warning: #ffc107;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; }
     .container { max-width: 1100px; margin: 0 auto; }
-
-    .header {
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--card-bg); padding: 15px 20px; border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
-    }
+    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
     .header h2 { color: var(--primary); }
     .btn-logout { background: var(--danger); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
     .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
     .stat-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
     .stat-card .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--primary-dark); }
-
-    #loginOverlay {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); display: flex; justify-content: center;
-      align-items: center; z-index: 999;
-    }
-    .login-box {
-      background: #fff; padding: 30px; border-radius: 10px;
-      width: 90%; max-width: 380px; text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
+    #loginOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 999; }
+    .login-box { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .login-box h3 { color: var(--primary); margin-bottom: 15px; }
     .login-box input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 5px; }
     .btn-login { width: 100%; background: var(--primary); color: #fff; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-
-    .section-box {
-      background: var(--card-bg); padding: 20px; border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px;
-    }
+    .section-box { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; }
     .section-box h3 { color: var(--primary-dark); margin-bottom: 12px; }
-
     .upload-form-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
     .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background: #000; }
     .slider-card img, .slider-card video { width: 100%; height: 100px; object-fit: cover; }
     .btn-del-img { position: absolute; top: 5px; right: 5px; background: var(--danger); color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem; z-index: 5; }
-
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
     .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
-
     .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
     .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; }
     .filter-bar input { flex-grow: 1; }
-
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
     th { background: #e6f2f2; color: var(--primary-dark); }
-
     .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
     .badge-pending { background: var(--warning); color: #000; }
     .badge-approved { background: var(--success); color: #fff; }
     .badge-rejected { background: var(--danger); color: #fff; }
-
     .btn-action { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 3px; }
     .btn-approve { background: var(--success); color: #fff; }
     .btn-reject { background: var(--danger); color: #fff; }
   </style>
 </head>
 <body>
-
   <div id="loginOverlay">
     <div class="login-box">
       <h3>🔒 CASA LIEZL ADMIN</h3>
@@ -169,7 +142,6 @@
           <option value="REJECTED">Rejected</option>
         </select>
       </div>
-      
       <div style="overflow-x: auto;">
         <table>
           <thead>
@@ -214,7 +186,7 @@
   <script>
     let authToken = localStorage.getItem('resortAdminToken') || "";
     let globalBookings = [];
-    let currentRates = { dayTour: 150, nightTour: 180, overnight: 300 };
+    let currentRates = { dayTour: 300, nightTour: 350, overnight: 3000 };
 
     if (authToken) { showDashboard(); }
 
@@ -292,17 +264,15 @@
         grid.innerHTML = images.map(img => `
           <div class="slider-card">
             <img src="${img}">
-            <button class="btn-del-img" onclick="deleteSlider('${img}')">🗑️</button>
+            <button class="btn-del-img" onclick="deleteSlider('${img.replace('/uploads/sliders/', '')}')">🗑️</button>
           </div>
         `).join('');
       });
     }
 
-    function deleteSlider(imageUrl) {
+    function deleteSlider(filename) {
       if(!confirm("Delete this banner?")) return;
-      const publicIdMatch = imageUrl.match(/\/resort_sliders\/([^/.]+)/);
-      const publicId = publicIdMatch ? publicIdMatch[1] : imageUrl;
-      fetch(`/api/sliders/${publicId}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadSliderAdmin());
+      fetch(`/api/sliders/${filename}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadSliderAdmin());
     }
 
     function loadFacilityAdmin() {
