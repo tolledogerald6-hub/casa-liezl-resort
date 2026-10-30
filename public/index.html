@@ -89,7 +89,7 @@
     .weather-temp { font-size: 2rem; font-weight: bold; color: var(--primary-dark); }
     .weather-badge { background: var(--accent); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
-    /* 🏞️ INTERACTIVE GALLERY STYLES */
+    /* 🏞️ GALLERY STYLES */
     .gallery-filter { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
     .filter-btn {
       padding: 8px 18px; border: 1px solid var(--primary); background: transparent;
@@ -107,6 +107,24 @@
       position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,77,77,0.85);
       color: #fff; padding: 8px 12px; font-size: 0.85rem; font-weight: bold; text-align: center;
     }
+
+    /* ❓ FAQ STYLES */
+    .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
+    .faq-item {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 8px; margin-bottom: 12px; overflow: hidden;
+    }
+    .faq-question {
+      padding: 16px 20px; background: #fff; font-weight: bold; color: var(--primary-dark);
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+      user-select: none; font-size: 1rem;
+    }
+    .faq-answer {
+      padding: 0 20px; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease; color: #555; font-size: 0.93rem;
+    }
+    .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
+    .faq-item.active .faq-question span { transform: rotate(180deg); }
 
     /* 💵 RATES & PRICING STYLES */
     .rates-card {
@@ -134,7 +152,7 @@
     .cal-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
     .legend-box { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
 
-    /* 🗺️ MAP & LOCATION STYLES */
+    /* 🗺️ MAP STYLES */
     .map-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
     .map-actions { display: flex; gap: 12px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
     .btn-map { padding: 10px 20px; border-radius: 25px; font-weight: bold; text-decoration: none; color: #fff; display: inline-flex; align-items: center; gap: 8px; }
@@ -198,14 +216,14 @@
 
     <div class="hero-overlay">
       <h1>Relax, Refresh, & Reconnect</h1>
-      <p>Ang perpektong lugar para sa inyong pamilya, barkada, at special events.</p>
+      <p>The perfect venue for your family get-togethers, barkada outings, and private events.</p>
       <button class="btn-nav btn-book-nav" style="font-size: 1.1rem; padding: 12px 30px;" onclick="openBookingModal()">RESERVE YOUR DATE</button>
     </div>
   </div>
 
   <div class="container">
 
-    <!-- ☀️ LIVE WEATHER FORECAST WIDGET -->
+    <!-- ☀️ WEATHER FORECAST WIDGET -->
     <div class="weather-card">
       <div class="weather-info">
         <span style="font-size: 2.2rem;">☀️</span>
@@ -214,36 +232,36 @@
           <div class="weather-temp">31°C Sunny</div>
         </div>
       </div>
-      <div class="weather-badge">🤿 Perfect Swimming Day!</div>
+      <div class="weather-badge">🤿 Perfect Swimming Weather!</div>
     </div>
 
     <div class="section-title">
       <h2>🌴 Our Resort Amenities</h2>
-      <p>Maranasan ang malamig na tubig at magagandang pasilidad sa Casa Liezl Resort.</p>
+      <p>Experience fresh pool water and comfortable facilities here at Casa Liezl Resort.</p>
     </div>
 
     <div class="grid-3">
       <div class="feature-card">
         <span class="feature-icon">🏊‍♂️</span>
         <h3>Crystal Clear Pools</h3>
-        <p>May Adult at Kiddie pools na laging malinis at presko para sa buong pamilya.</p>
+        <p>Clean and refreshed Adult & Kiddie pools suitable for the whole family.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🏡</span>
         <h3>Cozy Rooms & Cottages</h3>
-        <p>Komportableng Aircon rooms at maluluwang na cottages para sa inyong pahinga.</p>
+        <p>Comfortable Aircon rooms and spacious open cottages for your staycation.</p>
       </div>
       <div class="feature-card">
         <span class="feature-icon">🎉</span>
         <h3>Private Exclusive Rental</h3>
-        <p>Pwede ring irenta ang buong resort para sa Birthday, Reunion, o Private Gatherings.</p>
+        <p>Exclusive resort rental options for Birthdays, Reunions, and Private Gatherings.</p>
       </div>
     </div>
 
-    <!-- 🏞️ INTERACTIVE FACILITIES GALLERY WITH CATEGORY FILTERS -->
+    <!-- 🏞️ DYNAMIC FACILITIES GALLERY -->
     <div class="section-title">
       <h2>📸 Resort Facilities & Tour</h2>
-      <p>Pumili ng kategorya para ma-explore ang aming pasilidad.</p>
+      <p>Filter by category to explore our resort amenities.</p>
     </div>
 
     <div class="gallery-filter">
@@ -255,36 +273,13 @@
     </div>
 
     <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-item" data-category="pools">
-        <img src="https://placehold.co/600x400/008080/ffffff?text=Main+Adult+Pool" alt="Main Pool">
-        <div class="gallery-caption">Main Adult Swimming Pool</div>
-      </div>
-      <div class="gallery-item" data-category="pools">
-        <img src="https://placehold.co/600x400/004d4d/ffffff?text=Kiddie+Pool" alt="Kiddie Pool">
-        <div class="gallery-caption">Safe Kiddie Pool with Fountain</div>
-      </div>
-      <div class="gallery-item" data-category="rooms">
-        <img src="https://placehold.co/600x400/2c3e50/ffffff?text=Aircon+Family+Room" alt="Family Room">
-        <div class="gallery-caption">Aircon Family Room (6-10 Pax)</div>
-      </div>
-      <div class="gallery-item" data-category="rooms">
-        <img src="https://placehold.co/600x400/ff7f50/ffffff?text=Standard+Couples+Room" alt="Couples Room">
-        <div class="gallery-caption">Standard Aircon Room</div>
-      </div>
-      <div class="gallery-item" data-category="cottages">
-        <img src="https://placehold.co/600x400/008080/ffffff?text=Spacious+Cottage" alt="Cottage">
-        <div class="gallery-caption">Spacious Open Cottage</div>
-      </div>
-      <div class="gallery-item" data-category="night">
-        <img src="https://placehold.co/600x400/1a1a1a/ffffff?text=Night+Pool+Lighting" alt="Night View">
-        <div class="gallery-caption">Night Swimming Ambient Lighting</div>
-      </div>
+      <p style="text-align:center; color:#888; grid-column:1/-1;">Loading facilities gallery...</p>
     </div>
 
     <!-- 💵 RESORT RATES DISPLAY -->
     <div class="rates-card">
       <h2 style="font-size: 1.8rem;">🏷️ Entrance & Rental Rates</h2>
-      <p style="font-size: 0.95rem; opacity: 0.9;">Presyo para sa inyong bakasyon sa Casa Liezl Resort</p>
+      <p style="font-size: 0.95rem; opacity: 0.9;">Updated pricing for your stay at Casa Liezl Resort</p>
       <div class="rates-grid">
         <div class="rate-box">
           <h4>☀️ Day Tour</h4>
@@ -307,7 +302,7 @@
     <!-- 🗓️ INTERACTIVE CALENDAR SECTION -->
     <div class="section-title">
       <h2>📅 Reservation Schedule Calendar</h2>
-      <p>Tingnan ang mga bakanteng araw bago mag-book.</p>
+      <p>Check available dates before submitting your booking request.</p>
     </div>
 
     <div class="calendar-wrapper">
@@ -326,10 +321,61 @@
       </div>
     </div>
 
+    <!-- ❓ FREQUENTLY ASKED QUESTIONS (FAQ SECTION) -->
+    <div class="section-title">
+      <h2>❓ Frequently Asked Questions (FAQ)</h2>
+      <p>Quick answers to common questions about Casa Liezl Resort.</p>
+    </div>
+
+    <div class="faq-container">
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question">
+          1. Allowed ba ang magdala ng outside food and drinks? May corkage fee ba?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes! Feel free to bring your own food, drinks, and grilling items. Absolutely <strong>NO CORKAGE FEE</strong> for regular food and non-alcoholic beverages.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question">
+          2. Ano ang eksaktong Check-in at Check-out schedule?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          Our standard shift schedules are:<br>
+          • <strong>Day Tour:</strong> 8:00 AM to 5:00 PM<br>
+          • <strong>Night Tour:</strong> 7:00 PM to 5:00 AM<br>
+          • <strong>24-Hour Overnight:</strong> Flexible 24-hour full stay staycation.
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question">
+          3. Paano i-confirm ang reservation matapos mag-submit ng form?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          After sending your GCash downpayment reference number, our resort team will verify your transaction and update your reservation status. You can also download your official PDF Voucher instantly!
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="toggleFAQ(this)">
+        <div class="faq-question">
+          4. May available sound system o Videoke facility ba sa resort?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes, sound systems and Videoke setups are available upon request depending on your rental package.
+        </div>
+      </div>
+    </div>
+
     <!-- 🗺️ GOOGLE MAPS & LOCATION NAVIGATION SECTION -->
     <div class="section-title">
       <h2>📍 Resort Location & Navigation</h2>
-      <p>Bisitahin kami sa Casa Liezl Resort. Gamitin ang navigation links sa ibaba para sa eksaktong direksyon.</p>
+      <p>Visit Casa Liezl Resort easily. Tap the navigation links below for exact pin directions.</p>
     </div>
 
     <div class="map-wrapper">
@@ -341,21 +387,21 @@
       </div>
     </div>
 
-    <!-- 💬 REVIEWS & RATINGS SECTION -->
+    <!-- 💬 REVIEWS SECTION -->
     <div class="section-title">
       <h2>⭐ Guest Reviews & Testimonials</h2>
-      <p>Tingnan ang karanasan ng ating mga naging bisita sa Casa Liezl Resort.</p>
+      <p>See what our guests say about their stay at Casa Liezl Resort.</p>
     </div>
 
     <div class="reviews-grid" id="reviewsGrid"></div>
 
     <div class="add-review-box">
-      <h3 style="color: var(--primary); text-align: center; margin-bottom: 15px;">✍️ Mag-iwan ng Review</h3>
+      <h3 style="color: var(--primary); text-align: center; margin-bottom: 15px;">✍️ Leave a Guest Review</h3>
       <form onsubmit="handleReviewSubmit(event)">
         <div class="form-row">
           <div class="form-group">
-            <label>Pangalan</label>
-            <input type="text" id="revName" required placeholder="Pangalan mo">
+            <label>Your Name</label>
+            <input type="text" id="revName" required placeholder="e.g. Juan Dela Cruz">
           </div>
           <div class="form-group">
             <label>Rating</label>
@@ -367,8 +413,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label>Karanasan / Komento</label>
-          <textarea id="revComment" rows="3" required placeholder="Ibahagi ang naging karanasan sa Casa Liezl Resort..."></textarea>
+          <label>Your Feedback / Comment</label>
+          <textarea id="revComment" rows="3" required placeholder="Share your staycation experience at Casa Liezl Resort..."></textarea>
         </div>
         <button type="submit" class="btn-submit" style="margin-top: 5px;">SUBMIT REVIEW</button>
       </form>
@@ -377,7 +423,7 @@
 
   <button class="floating-book-btn" onclick="openBookingModal()">📅 BOOK NOW</button>
 
-  <!-- 🎵 FLOATING YOUTUBE PLAYMIX WIDGET -->
+  <!-- 🎵 YOUTUBE PLAYMIX WIDGET -->
   <div id="youtubePlaymixWidget" style="position: fixed; bottom: 85px; right: 25px; background: rgba(0, 77, 77, 0.95); color: #fff; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 998; border: 1px solid rgba(255,255,255,0.2);">
     <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">▶</button>
     <span style="font-size: 0.85rem; font-weight: bold;">🌴 Summer Vibes</span>
@@ -398,11 +444,11 @@
       <form id="bookingForm" onsubmit="handleBooking(event)">
         <div class="form-row">
           <div class="form-group">
-            <label>Full Name / Kumpletong Pangalan</label>
+            <label>Full Name</label>
             <input type="text" id="custName" required placeholder="e.g. Juan Dela Cruz">
           </div>
           <div class="form-group">
-            <label>Contact Number</label>
+            <label>Contact Phone Number</label>
             <input type="tel" id="custPhone" required placeholder="09XX-XXX-XXXX">
           </div>
         </div>
@@ -411,7 +457,7 @@
           <div class="form-group">
             <label>Check-in Date</label>
             <input type="date" id="checkInDate" required onchange="validateDateSelection()">
-            <div id="dateWarning" class="date-warning">⚠️ Fully Booked na ang petsang ito! Pumili ng ibang araw.</div>
+            <div id="dateWarning" class="date-warning">⚠️ This date is already fully booked! Please select another date.</div>
           </div>
           <div class="form-group">
             <label>Shift / Schedule</label>
@@ -425,7 +471,7 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Accommodation / Package</label>
+            <label>Accommodation Package</label>
             <select id="packageType" required>
               <option value="Standard Cottage">Standard Cottage</option>
               <option value="Aircon Room (2-4 Pax)">Aircon Room (2-4 Pax)</option>
@@ -441,7 +487,7 @@
 
         <div class="form-group">
           <label>Special Requests / Notes (Optional)</label>
-          <textarea id="specialNotes" rows="2" placeholder="Mga karagdagang kahilingan..."></textarea>
+          <textarea id="specialNotes" rows="2" placeholder="Any additional notes..."></textarea>
         </div>
 
         <div class="payment-box">
@@ -449,7 +495,7 @@
           <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">LIEZL RESORT</strong></p>
           <p style="font-size: 0.9rem; color: var(--primary-dark);">GCASH NO: <strong id="dispGcashNum">09XX-XXX-XXXX</strong></p>
           <div class="form-group" style="margin-top: 8px; margin-bottom: 0;">
-            <input type="text" id="gcashRef" required placeholder="Enter GCash Ref No. after payment">
+            <input type="text" id="gcashRef" required placeholder="Enter GCash Ref No. after sending payment">
           </div>
         </div>
 
@@ -482,7 +528,7 @@
     <div class="modal-box" style="max-width: 450px; text-align: center;">
       <h2 style="color: var(--primary);">✅ BOOKING SUBMITTED!</h2>
       <p style="margin: 15px 0; font-size: 0.95rem;" id="modalDetails"></p>
-      <p style="font-size: 0.8rem; color: #777;">Kukontakin kayo ng Casa Liezl Resort staff sa inyong phone number para sa confirmation.</p>
+      <p style="font-size: 0.8rem; color: #777;">Our resort team will reach out to your phone number shortly for confirmation.</p>
       <br>
       <button class="btn-submit" onclick="closeConfirmationModal()">OKAY, THANK YOU</button>
     </div>
@@ -498,7 +544,31 @@
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
 
-    // GALLERY FILTER LOGIC
+    // FAQ ACCORDION LOGIC
+    function toggleFAQ(element) {
+      element.classList.toggle('active');
+    }
+
+    // DYNAMIC FACILITIES GALLERY LOAD & FILTER
+    function loadFacilitiesGallery() {
+      fetch('/api/facilities')
+        .then(r => r.json())
+        .then(items => {
+          const grid = document.getElementById('galleryGrid');
+          if (!items || !items.length) {
+            grid.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1;">No photos uploaded yet in Facilities Gallery.</p>';
+            return;
+          }
+
+          grid.innerHTML = items.map(item => `
+            <div class="gallery-item" data-category="${item.category}">
+              <img src="/facility-images/${item.filename}" alt="${item.title}">
+              <div class="gallery-caption">${item.title}</div>
+            </div>
+          `).join('');
+        });
+    }
+
     function filterGallery(category, btn) {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -513,7 +583,7 @@
       });
     }
 
-    // DIRECT YOUTUBE API AUDIO BINDING
+    // YOUTUBE PLAYMIX API BINDING
     let ytPlayer;
     let isPlaying = false;
 
@@ -524,9 +594,7 @@
 
     function onYouTubeIframeAPIReady() {
       ytPlayer = new YT.Player('ytIframe', {
-        events: {
-          'onReady': onPlayerReady
-        }
+        events: { 'onReady': onPlayerReady }
       });
     }
 
@@ -630,7 +698,7 @@
 
     function selectDateFromCal(dateStr, isBooked) {
       if (isBooked) {
-        alert("Paumanhin! Ang petsang ito ay Fully Booked na.");
+        alert("Paumanhin! Fully Booked na ang napiling petsa.");
         return;
       }
       openBookingModal();
@@ -638,14 +706,14 @@
       validateDateSelection();
     }
 
-    // LOAD REVIEWS LOGIC
+    // REVIEWS LOGIC
     function loadReviews() {
       fetch('/api/reviews')
         .then(r => r.json())
         .then(reviews => {
           const grid = document.getElementById('reviewsGrid');
           if (!reviews.length) {
-            grid.innerHTML = '<p style="text-align:center; color:#888;">Wala pang reviews. Maging una sa pag-iwan ng feedback!</p>';
+            grid.innerHTML = '<p style="text-align:center; color:#888;">No reviews yet. Be the first to leave a feedback!</p>';
             return;
           }
 
@@ -789,6 +857,7 @@
     loadSettings();
     renderCalendar();
     loadReviews();
+    loadFacilitiesGallery();
 
     function handleBooking(e) {
       e.preventDefault();
@@ -811,7 +880,7 @@
         if(d.success) {
           closeModal('bookingModal');
           const details = 
-            `Salamat <strong>${payload.name}</strong>!<br>Nareceive na namin ang reservation request mo para sa <strong>${payload.checkInDate}</strong>.<br><br>` +
+            `Thank you <strong>${payload.name}</strong>!<br>We received your reservation request for <strong>${payload.checkInDate}</strong>.<br><br>` +
             `GCash Ref No: <strong>${payload.gcashRef}</strong><br><br>` +
             `<a href="/api/download-voucher/${d.bookingId}" target="_blank" class="btn-submit" style="display:inline-block; text-decoration:none; width:auto; padding:10px 20px;">📥 DOWNLOAD PDF VOUCHER</a>`;
           
