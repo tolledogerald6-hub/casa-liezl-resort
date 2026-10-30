@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Open Graph / Social Media Share Preview Tags -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://casaliezlresort.online/">
   <meta property="og:title" content="CASA LIEZL PRIVATE RESORT - Tropical Paradise & Relaxation">
   <meta property="og:description" content="Book your 22-hours staycation, family get-togethers, and pool parties at Casa Liezl Private Resort. Reserve online now!">
   <meta property="og:image" content="https://casaliezlresort.online/slider-images/banner1.jpg">
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://casaliezlresort.online/">
+  <meta name="twitter:title" content="CASA LIEZL PRIVATE RESORT - Tropical Paradise & Relaxation">
+  <meta name="twitter:description" content="Book your 22-hours staycation and private events at Casa Liezl Private Resort.">
+  <meta name="twitter:image" content="https://casaliezlresort.online/slider-images/banner1.jpg">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,6 +31,7 @@
       --success: #28a745;
     }
 
+    /* DARK MODE VARIABLES */
     [data-theme="dark"] {
       --primary: #00b3b3;
       --primary-dark: #008080;
@@ -34,6 +43,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+
     body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
 
     .navbar {
@@ -43,6 +53,7 @@
     }
     .navbar .logo { color: #fff; font-size: 1.5rem; font-weight: 800; }
     .navbar .logo span { color: var(--accent); }
+
     .nav-actions { display: flex; gap: 10px; align-items: center; }
 
     .btn-nav {
@@ -52,6 +63,7 @@
     }
     .btn-book-nav { background: var(--accent); color: #fff; box-shadow: 0 4px 10px rgba(255,127,80,0.4); }
     .btn-book-nav:hover { background: #e0663b; transform: translateY(-2px); }
+    
     .btn-admin-nav { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
     .btn-admin-nav:hover { background: rgba(255,255,255,0.3); }
 
@@ -99,6 +111,7 @@
     .feature-card { background: var(--card-bg); border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); text-align: center; }
     .feature-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; }
 
+    /* WEATHER WIDGET */
     .weather-card {
       background: linear-gradient(135deg, #e0f2fe, #bae6fd); border: 1px solid #7dd3fc;
       border-radius: 12px; padding: 15px 25px; display: flex; align-items: center;
@@ -110,6 +123,7 @@
     [data-theme="dark"] .weather-temp { color: var(--primary); }
     .weather-badge { background: var(--accent); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
+    /* GALLERY CAROUSEL WITH HOVER EFFECT */
     .gallery-carousel-wrapper { position: relative; margin-bottom: 50px; }
     .gallery-scroll-container {
       display: flex; gap: 18px; overflow-x: auto; scroll-behavior: smooth;
@@ -142,6 +156,7 @@
     .gallery-nav-btn.left { left: -15px; }
     .gallery-nav-btn.right { right: -15px; }
 
+    /* LIGHTBOX ZOOM MODAL */
     .lightbox-overlay {
       display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 20px;
@@ -150,6 +165,7 @@
     .lightbox-caption { color: #fff; margin-top: 15px; font-size: 1.1rem; font-weight: bold; text-align: center; }
     .lightbox-close { position: absolute; top: 20px; right: 30px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; }
 
+    /* RATES */
     .rates-card {
       background: linear-gradient(135deg, #008080, #004d4d); color: #fff;
       padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 50px; box-shadow: 0 6px 20px rgba(0,128,128,0.25);
@@ -158,6 +174,7 @@
     .rate-box { background: rgba(255,255,255,0.15); padding: 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); }
     .rate-price { font-size: 1.8rem; font-weight: bold; color: var(--accent); margin-top: 5px; }
 
+    /* CALENDAR */
     .calendar-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .calendar-header button { background: var(--primary); color: #fff; border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
@@ -176,6 +193,7 @@
     .cal-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
     .legend-box { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
 
+    /* FAQ */
     .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
     .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
     .faq-question {
@@ -188,6 +206,7 @@
     }
     .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
 
+    /* MAP & REVIEWS */
     .map-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
     .map-actions { display: flex; gap: 12px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
     .btn-map { padding: 10px 20px; border-radius: 25px; font-weight: bold; text-decoration: none; color: #fff; display: inline-flex; align-items: center; gap: 8px; }
@@ -199,12 +218,15 @@
     [data-theme="dark"] .review-name { color: var(--primary); }
     .review-date { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
     .review-comment { font-size: 0.9rem; color: var(--text); opacity: 0.9; }
+    
     .add-review-box { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
 
+    /* FLOATING BUTTONS */
     .floating-book-btn {
       position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: #fff; border: none;
       padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(255,127,80,0.5); z-index: 999;
     }
+    
     .floating-messenger-btn {
       position: fixed; bottom: 30px; left: 30px; background: #0084FF; color: #fff; border: none;
       width: 55px; height: 55px; border-radius: 50%; font-size: 1.6rem; cursor: pointer;
@@ -213,6 +235,7 @@
     }
     .floating-messenger-btn:hover { transform: scale(1.1); }
 
+    /* MODALS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
     .modal-box { background: var(--card-bg); color: var(--text); padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
     .close-modal-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text); }
@@ -232,6 +255,7 @@
     .btn-submit { width: 100%; background: var(--accent); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
     .btn-submit:hover { background: #e0663b; }
     .date-warning { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; font-weight: bold; }
+
     footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 25px 10px; margin-top: 50px; }
 
     @media (max-width: 768px) {
@@ -271,6 +295,7 @@
   </div>
 
   <div class="container">
+
     <div class="weather-card">
       <div class="weather-info">
         <span style="font-size: 2.2rem;">☀️</span>
@@ -318,6 +343,7 @@
       <button class="gallery-nav-btn right" onclick="scrollGallery(300)">&gt;</button>
     </div>
 
+    <!-- LIGHTBOX ZOOM OVERLAY -->
     <div id="lightboxModal" class="lightbox-overlay" onclick="closeLightbox()">
       <button class="lightbox-close">&times;</button>
       <div id="lightboxMediaContainer" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;"></div>
@@ -374,16 +400,36 @@
 
     <div class="faq-container">
       <div class="faq-item" onclick="toggleFAQ(this)">
-        <div class="faq-question">1. Allowed ba ang magdala ng outside food and drinks? May corkage fee ba? <span style="transition:0.3s;">▼</span></div>
-        <div class="faq-answer">Yes! Feel free to bring your own food, drinks, and grilling items. Absolutely <strong>NO CORKAGE FEE</strong> for regular food and non-alcoholic beverages.</div>
+        <div class="faq-question">
+          1. Allowed ba ang magdala ng outside food and drinks? May corkage fee ba?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          Yes! Feel free to bring your own food, drinks, and grilling items. Absolutely <strong>NO CORKAGE FEE</strong> for regular food and non-alcoholic beverages.
+        </div>
       </div>
+
       <div class="faq-item" onclick="toggleFAQ(this)">
-        <div class="faq-question">2. Ano ang eksaktong Check-in at Check-out schedule? <span style="transition:0.3s;">▼</span></div>
-        <div class="faq-answer">Our standard shift schedules are:<br>• <strong>Day Tour:</strong> 8:00 AM to 5:00 PM<br>• <strong>Night Tour:</strong> 7:00 PM to 5:00 AM<br>• <strong>22-Hour Exclusive Stay:</strong> Complete 22 hours private staycation package.</div>
+        <div class="faq-question">
+          2. Ano ang eksaktong Check-in at Check-out schedule?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          Our standard shift schedules are:<br>
+          • <strong>Day Tour:</strong> 8:00 AM to 5:00 PM<br>
+          • <strong>Night Tour:</strong> 7:00 PM to 5:00 AM<br>
+          • <strong>22-Hour Exclusive Stay:</strong> Complete 22 hours private staycation package.
+        </div>
       </div>
+
       <div class="faq-item" onclick="toggleFAQ(this)">
-        <div class="faq-question">3. Paano i-confirm ang reservation matapos mag-submit ng form? <span style="transition:0.3s;">▼</span></div>
-        <div class="faq-answer">After sending your GCash downpayment to our official account, our resort team will verify your transaction and update your reservation status instantly.</div>
+        <div class="faq-question">
+          3. Paano i-confirm ang reservation matapos mag-submit ng form?
+          <span style="transition:0.3s;">▼</span>
+        </div>
+        <div class="faq-answer">
+          After sending your GCash downpayment to our official account, our resort team will verify your transaction and update your reservation status instantly.
+        </div>
       </div>
     </div>
 
@@ -522,6 +568,7 @@
     <div class="modal-box" style="max-width: 380px;">
       <button class="close-modal-btn" onclick="closeModal('adminLoginModal')">&times;</button>
       <h3 style="color: var(--primary); text-align: center; margin-bottom: 15px;">🔒 ADMIN LOGIN</h3>
+
       <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
         <div class="form-group">
           <label>Admin Username</label>
@@ -554,8 +601,10 @@
   <script>
     let disabledDates = [];
     let currentCalDate = new Date();
+
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
 
+    // THEME TOGGLE LOGIC
     function toggleTheme() {
       const body = document.body;
       const btn = document.getElementById('themeToggleBtn');
@@ -575,6 +624,7 @@
       document.getElementById('themeToggleBtn').innerText = '☀️';
     }
 
+    // COPY LOGIC
     function copyText(id) {
       navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => alert("Copied to clipboard!"));
     }
@@ -587,7 +637,10 @@
     }
 
     function toggleFAQ(element) { element.classList.toggle('active'); }
-    function scrollGallery(val) { document.getElementById('galleryContainer').scrollBy({ left: val, behavior: 'smooth' }); }
+
+    function scrollGallery(val) {
+      document.getElementById('galleryContainer').scrollBy({ left: val, behavior: 'smooth' });
+    }
 
     function loadFacilitiesGallery() {
       fetch('/api/facilities')
@@ -602,9 +655,10 @@
           container.innerHTML = items.map(item => {
             const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
             const mediaTag = isVid 
-              ? `<video src="${item.filename}" preload="metadata"></video>`
-              : `<img src="${item.filename}" alt="${item.title}">`;
+              ? `<video src="/facility-images/${item.filename}" preload="metadata"></video>`
+              : `<img src="/facility-images/${item.filename}" alt="${item.title}">`;
 
+            // Added onclick for the Lightbox Zoom
             return `
               <div class="gallery-card" onclick="openLightbox('${item.filename}', '${item.title}', '${item.type}')">
                 <div class="gallery-media-box">
@@ -617,6 +671,7 @@
         });
     }
 
+    // LIGHTBOX ZOOM LOGIC
     function openLightbox(filename, title, type) {
       const modal = document.getElementById('lightboxModal');
       const container = document.getElementById('lightboxMediaContainer');
@@ -624,8 +679,8 @@
       const isVid = type === 'video' || /\.(mp4|webm|mov)$/i.test(filename);
 
       container.innerHTML = isVid 
-        ? `<video src="${filename}" class="lightbox-content" controls autoplay></video>`
-        : `<img src="${filename}" class="lightbox-content" alt="${title}">`;
+        ? `<video src="/facility-images/${filename}" class="lightbox-content" controls autoplay></video>`
+        : `<img src="/facility-images/${filename}" class="lightbox-content" alt="${title}">`;
       
       caption.innerText = title;
       modal.style.display = 'flex';
@@ -636,6 +691,7 @@
       document.getElementById('lightboxMediaContainer').innerHTML = '';
     }
 
+    // YOUTUBE MUSIC WIDGET
     let ytPlayer;
     let isPlaying = false;
     var tag = document.createElement('script');
@@ -721,6 +777,7 @@
     }
 
     function changeCalMonth(delta) { currentCalDate.setMonth(currentCalDate.getMonth() + delta); renderCalendar(); }
+
     function selectDateFromCal(dateStr, isBooked) {
       if (isBooked) { alert("Paumanhin! Fully Booked na ang napiling petsa."); return; }
       openBookingModal();
@@ -802,19 +859,18 @@
 
     let currentSlide = 0; let totalSlides = 0; let autoSlideTimer = null;
 
-    // Sa initSlider() ng index.html mo, siguraduhing ganito ang pagbasa:
-function initSlider() {
-  fetch('/api/sliders').then(r => r.json()).then(images => {
-    const track = document.getElementById('slideTrack');
-    const dots = document.getElementById('sliderDots');
-    if (images && images.length > 0) {
-      track.innerHTML = images.map(img => `<img src="${img}" class="slide-img" alt="Resort Image">`).join('');
-      dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
-      totalSlides = images.length;
-    } else { totalSlides = 1; }
-    startAutoSlide();
-  });
-}
+    function initSlider() {
+      fetch('/api/sliders').then(r => r.json()).then(images => {
+        const track = document.getElementById('slideTrack');
+        const dots = document.getElementById('sliderDots');
+        if (images && images.length > 0) {
+          track.innerHTML = images.map(img => `<img src="/slider-images/${img}" class="slide-img" alt="Resort Image">`).join('');
+          dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
+          totalSlides = images.length;
+        } else { totalSlides = 1; }
+        startAutoSlide();
+      });
+    }
 
     function goToSlide(i) {
       if (totalSlides <= 1) return;

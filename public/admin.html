@@ -17,48 +17,81 @@
       --danger: #dc3545;
       --warning: #ffc107;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; }
     .container { max-width: 1100px; margin: 0 auto; }
-    .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--card-bg); padding: 15px 20px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+    }
     .header h2 { color: var(--primary); }
-    .btn-logout { background: var(--danger); color: #fff; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+    .btn-logout {
+      background: var(--danger); color: #fff; border: none;
+      padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
+    }
+
+    /* REVENUE & STATS CARDS */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
     .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
     .stat-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
     .stat-card .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--primary-dark); }
-    #loginOverlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); display: flex; justify-content: center; align-items: center; z-index: 999; }
-    .login-box { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+
+    #loginOverlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7); display: flex; justify-content: center;
+      align-items: center; z-index: 999;
+    }
+    .login-box {
+      background: #fff; padding: 30px; border-radius: 10px;
+      width: 90%; max-width: 380px; text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
     .login-box h3 { color: var(--primary); margin-bottom: 15px; }
     .login-box input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid var(--border); border-radius: 5px; }
     .btn-login { width: 100%; background: var(--primary); color: #fff; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-    .section-box { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px; }
+
+    .section-box {
+      background: var(--card-bg); padding: 20px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px;
+    }
     .section-box h3 { color: var(--primary-dark); margin-bottom: 12px; }
+
     .upload-form-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
     .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
     .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background: #000; }
     .slider-card img, .slider-card video { width: 100%; height: 100px; object-fit: cover; }
     .btn-del-img { position: absolute; top: 5px; right: 5px; background: var(--danger); color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem; z-index: 5; }
+
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
     .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+
+    /* SEARCH & FILTER CONTROLS */
     .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
     .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; }
     .filter-bar input { flex-grow: 1; }
+
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
     th { background: #e6f2f2; color: var(--primary-dark); }
+
     .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
     .badge-pending { background: var(--warning); color: #000; }
     .badge-approved { background: var(--success); color: #fff; }
     .badge-rejected { background: var(--danger); color: #fff; }
+
     .btn-action { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 3px; }
     .btn-approve { background: var(--success); color: #fff; }
     .btn-reject { background: var(--danger); color: #fff; }
   </style>
 </head>
 <body>
+
   <div id="loginOverlay">
     <div class="login-box">
       <h3>🔒 CASA LIEZL ADMIN</h3>
@@ -77,6 +110,7 @@
       <button class="btn-logout" onclick="logoutAdmin()">LOGOUT</button>
     </div>
 
+    <!-- 📊 REVENUE & EARNINGS SUMMARY STATS -->
     <div class="stats-grid">
       <div class="stat-card">
         <h4>💰 Estimated Approved Revenue</h4>
@@ -92,6 +126,7 @@
       </div>
     </div>
 
+    <!-- ⚙️ GCASH & RATES SETTINGS -->
     <div class="section-box">
       <h3>⚙️ GCash & Resort Rates Settings</h3>
       <form onsubmit="saveSettings(event)">
@@ -108,6 +143,7 @@
       </form>
     </div>
 
+    <!-- 📸 HERO SLIDER IMAGES -->
     <div class="section-box">
       <h3>📸 Upload Banner Slide Pictures</h3>
       <form action="/upload-slider" method="POST" enctype="multipart/form-data" class="upload-form-row">
@@ -117,6 +153,7 @@
       <div class="slider-grid" id="sliderImagesGrid"></div>
     </div>
 
+    <!-- 🏊‍♂️ FACILITIES MEDIA MANAGEMENT -->
     <div class="section-box">
       <h3>📹 Upload Resort Facilities (Images & Videos)</h3>
       <form action="/upload-facility" method="POST" enctype="multipart/form-data" class="upload-form-row">
@@ -131,8 +168,11 @@
       <div class="slider-grid" id="facilityImagesGrid"></div>
     </div>
 
+    <!-- 📋 BOOKINGS -->
     <div class="section-box">
       <h3>📋 Listahan ng mga Reservations</h3>
+      
+      <!-- SEARCH & FILTER BAR -->
       <div class="filter-bar">
         <input type="text" id="searchBookingInput" placeholder="🔍 Maghanap sa pangalan o phone number..." oninput="filterBookings()">
         <select id="statusFilterSelect" onchange="filterBookings()">
@@ -142,6 +182,7 @@
           <option value="REJECTED">Rejected</option>
         </select>
       </div>
+      
       <div style="overflow-x: auto;">
         <table>
           <thead>
@@ -162,6 +203,7 @@
       </div>
     </div>
 
+    <!-- 💬 REVIEWS -->
     <div class="section-box">
       <h3>⭐ Customer Reviews Management</h3>
       <div style="overflow-x: auto;">
@@ -186,7 +228,7 @@
   <script>
     let authToken = localStorage.getItem('resortAdminToken') || "";
     let globalBookings = [];
-    let currentRates = { dayTour: 300, nightTour: 350, overnight: 3000 };
+    let currentRates = { dayTour: 150, nightTour: 180, overnight: 300 };
 
     if (authToken) { showDashboard(); }
 
@@ -263,8 +305,8 @@
         if (!images || !images.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No banner pictures uploaded yet.</p>'; return; }
         grid.innerHTML = images.map(img => `
           <div class="slider-card">
-            <img src="${img}">
-            <button class="btn-del-img" onclick="deleteSlider('${img.replace('/uploads/sliders/', '')}')">🗑️</button>
+            <img src="/slider-images/${img}">
+            <button class="btn-del-img" onclick="deleteSlider('${img}')">🗑️</button>
           </div>
         `).join('');
       });
@@ -282,7 +324,7 @@
         
         grid.innerHTML = items.map(item => {
           const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
-          const mediaTag = isVid ? `<video src="${item.filename}"></video>` : `<img src="${item.filename}">`;
+          const mediaTag = isVid ? `<video src="/facility-images/${item.filename}"></video>` : `<img src="/facility-images/${item.filename}">`;
           
           return `
             <div class="slider-card">
@@ -333,12 +375,14 @@
     function updateStats(bookings) {
       const approvedList = bookings.filter(b => b.status === 'APPROVED');
       const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
+
       let totalRev = 0;
       approvedList.forEach(b => {
         if (b.stayType.includes('Night')) totalRev += currentRates.nightTour;
         else if (b.stayType.includes('22-Hour') || b.stayType.includes('Exclusive')) totalRev += currentRates.overnight;
         else totalRev += currentRates.dayTour;
       });
+
       document.getElementById('statRevenue').innerText = `₱${totalRev.toLocaleString()}`;
       document.getElementById('statTotalBookings').innerText = approvedList.length;
       document.getElementById('statPendingBookings').innerText = pendingCount;
@@ -347,11 +391,13 @@
     function filterBookings() {
       const query = document.getElementById('searchBookingInput').value.toLowerCase();
       const statusFilter = document.getElementById('statusFilterSelect').value;
+      
       const filtered = globalBookings.filter(b => {
         const matchQuery = b.name.toLowerCase().includes(query) || b.phone.includes(query) || b.checkInDate.includes(query);
         const matchStatus = statusFilter === 'ALL' || b.status === statusFilter;
         return matchQuery && matchStatus;
       });
+      
       renderBookingsTable(filtered);
     }
 

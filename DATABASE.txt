@@ -1,0 +1,15 @@
+-MongoDB
+
+geraldtolledo6_db_user
+DSW1UVljW1d3Fk5S
+
+mongodb+srv://geraldtolledo6_db_user:<db_password>@cluster0.vthil0v.mongodb.net/
+
+--
+
+Cloudinary
+
+Cloud name : q7iyxzr4
+API Key : 454148557875984
+API Secret : 454148557875984
+
