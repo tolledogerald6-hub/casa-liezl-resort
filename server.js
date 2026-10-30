@@ -47,7 +47,7 @@ const facilityStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     let resourceType = 'image';
-    if (file.mimetype.startsWith('video') || req.body.mediaType === 'video') {
+    if (file && (file.mimetype.startsWith('video') || (req.body && req.body.mediaType === 'video'))) {
       resourceType = 'video';
     }
     return {
@@ -224,10 +224,14 @@ app.delete('/api/reviews/:id', authAdmin, async (req, res) => {
   res.json({ success: true });
 });
 
-// FACILITIES GALLERY APIS (CLOUD STORAGE)
+// FACILITIES GALLERY APIS (CLOUD STORAGE) + GET Fallback Guard
 app.get('/api/facilities', async (req, res) => {
   const db = await getDB();
   res.json(db.facilities || []);
+});
+
+app.get('/upload-facility', (req, res) => {
+  res.redirect('/admin.html');
 });
 
 app.post('/upload-facility', uploadFacility.single('facilityMedia'), async (req, res) => {
@@ -267,7 +271,7 @@ app.get('/api/booked-dates', async (req, res) => {
   res.json(db.bookings.filter(b => b.status === 'APPROVED').map(b => b.checkInDate));
 });
 
-// SLIDER APIS (CLOUD STORAGE)
+// SLIDER APIS (CLOUD STORAGE) + GET Fallback Guard
 app.get('/api/sliders', async (req, res) => {
   try {
     const result = await cloudinary.search
@@ -279,6 +283,10 @@ app.get('/api/sliders', async (req, res) => {
   } catch (err) {
     res.json([]);
   }
+});
+
+app.get('/upload-slider', (req, res) => {
+  res.redirect('/admin.html');
 });
 
 app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => {
