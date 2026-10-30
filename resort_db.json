@@ -1,0 +1,65 @@
+{
+  "bookings": [
+    {
+      "id": 1793195819945,
+      "name": "SHERLYN JOY BUGTONG",
+      "phone": "0909565484",
+      "checkInDate": "2027-10-09",
+      "stayType": "Day Tour (8:00 AM - 5:00 PM)",
+      "packageType": "Standard Cottage",
+      "guests": 2,
+      "notes": "",
+      "gcashRef": "test",
+      "status": "PENDING",
+      "createdAt": "10/28/2026, 9:56:59 PM"
+    },
+    {
+      "id": 1793195427984,
+      "name": "GERALD TOLLEDO",
+      "phone": "0909503152",
+      "checkInDate": "2026-11-15",
+      "stayType": "Day Tour (8:00 AM - 5:00 PM)",
+      "packageType": "Standard Cottage",
+      "guests": 2,
+      "notes": "",
+      "gcashRef": "test",
+      "status": "PENDING",
+      "createdAt": "10/28/2026, 9:50:27 PM"
+    },
+    {
+      "id": 1793194875859,
+      "name": "GERALD TOLLEDO",
+      "phone": "0909543152",
+      "checkInDate": "2026-12-10",
+      "stayType": "Day Tour (8:00 AM - 5:00 PM)",
+      "packageType": "Standard Cottage",
+      "guests": 2,
+      "notes": "",
+      "gcashRef": "asdasd",
+      "status": "APPROVED",
+      "createdAt": "10/28/2026, 9:41:15 PM"
+    },
+    {
+      "id": 1793194715249,
+      "name": "GERALD TOLLEDO",
+      "phone": "09456703433",
+      "checkInDate": "2026-12-10",
+      "stayType": "Day Tour (8:00 AM - 5:00 PM)",
+      "packageType": "Aircon Room (2-4 Pax)",
+      "guests": 3,
+      "notes": "",
+      "gcashRef": "test",
+      "status": "APPROVED",
+      "createdAt": "10/28/2026, 9:38:35 PM"
+    }
+  ],
+  "rates": {
+    "dayTour": 150,
+    "nightTour": 180,
+    "overnight": 300
+  },
+  "gcashName": "LIEZL RESORT",
+  "gcashNumber": "09XX-XXX-XXXX",
+  "discordWebhook": "",
+  "reviews": []
+}
