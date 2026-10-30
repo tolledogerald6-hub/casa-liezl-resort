@@ -187,6 +187,15 @@
       padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(255,127,80,0.5); z-index: 999;
     }
 
+    /* FLOATING MESSENGER BUTTON */
+    .floating-messenger-btn {
+      position: fixed; bottom: 30px; left: 30px; background: #0084FF; color: #fff; border: none;
+      width: 55px; height: 55px; border-radius: 50%; font-size: 1.6rem; cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0,132,255,0.4); z-index: 999; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.2s; text-decoration: none;
+    }
+    .floating-messenger-btn:hover { transform: scale(1.1); }
+
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
     .modal-box { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
     .close-modal-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #888; }
@@ -195,6 +204,14 @@
     .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
     .payment-box { background: #e6f2f2; border: 1px dashed var(--primary); padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; }
+    
+    /* COPY BUTTON STYLE */
+    .btn-copy {
+      background: var(--primary); color: #fff; border: none; padding: 4px 10px;
+      border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-left: 5px;
+    }
+    .btn-copy:hover { background: var(--primary-dark); }
+
     .btn-submit { width: 100%; background: var(--accent); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
     .date-warning { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; font-weight: bold; }
 
@@ -291,17 +308,17 @@
         <div class="rate-box">
           <h4>☀️ Day Tour</h4>
           <p style="font-size: 0.8rem;">8:00 AM - 5:00 PM</p>
-          <div class="rate-price" id="rateDay">₱300</div>
+          <div class="rate-price" id="rateDay">₱1,500</div>
         </div>
         <div class="rate-box">
           <h4>🌙 Night Tour</h4>
           <p style="font-size: 0.8rem;">7:00 PM - 5:00 AM</p>
-          <div class="rate-price" id="rateNight">₱350</div>
+          <div class="rate-price" id="rateNight">₱2,000</div>
         </div>
         <div class="rate-box">
           <h4>🏡 22-Hour Exclusive Stay</h4>
           <p style="font-size: 0.8rem;">Full Staycation Package</p>
-          <div class="rate-price" id="rateOvernight">₱3000</div>
+          <div class="rate-price" id="rateOvernight">₱3,500</div>
         </div>
       </div>
     </div>
@@ -415,6 +432,7 @@
   </div>
 
   <button class="floating-book-btn" onclick="openBookingModal()">📅 BOOK NOW</button>
+  <a href="https://m.me/100090588501360" target="_blank" class="floating-messenger-btn" title="Chat on Messenger">💬</a>
 
   <div id="youtubePlaymixWidget" style="position: fixed; bottom: 85px; right: 25px; background: rgba(0, 77, 77, 0.95); color: #fff; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 998; border: 1px solid rgba(255,255,255,0.2);">
     <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">▶</button>
@@ -483,9 +501,9 @@
 
         <div class="payment-box">
           <h4 style="color: var(--primary-dark); font-size: 0.9rem;">💙 GCASH DOWNPAYMENT DETAILS</h4>
-          <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">SH***A I.</strong></p>
-          <p style="font-size: 0.9rem; color: var(--primary-dark);">GCASH NO: <strong id="dispGcashNum">09655247530</strong></p>
-          <div class="form-group" style="margin-top: 8px; margin-bottom: 0;">
+          <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">SH***A I.</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashName')">Copy Name</button></p>
+          <p style="font-size: 0.9rem; color: var(--primary-dark); margin-top: 5px;">GCASH NO: <strong id="dispGcashNum">09655247530</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashNum')">Copy Number</button></p>
+          <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
             <input type="text" id="gcashRef" required placeholder="Enter GCash Ref No. after sending payment">
           </div>
         </div>
@@ -534,6 +552,15 @@
     let currentCalDate = new Date();
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
+
+    function copyText(elementId) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("Copied to clipboard: " + textToCopy);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
 
     function toggleFAQ(element) { element.classList.toggle('active'); }
 
