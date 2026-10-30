@@ -5,6 +5,9 @@ const fs = require('fs');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const PDFDocument = require('pdfkit');
+const mongoose = require('mongoose');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -24,23 +27,26 @@ const transporter = nodemailer.createTransport({
 // 🔒 MULTI-DEVICE ADMIN SESSIONS
 let activeSessions = new Set();
 
-const dbFile = path.join(__dirname, 'resort_db.json');
-const uploadFolder = path.join(__dirname, 'public', 'uploads');
-const sliderFolder = path.join(__dirname, 'public', 'uploads', 'slider');
-const facilityFolder = path.join(__dirname, 'public', 'uploads', 'facility');
-
-if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
-if (!fs.existsSync(sliderFolder)) fs.mkdirSync(sliderFolder, { recursive: true });
-if (!fs.existsSync(facilityFolder)) fs.mkdirSync(facilityFolder, { recursive: true });
-
-const sliderStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, sliderFolder),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+// ☁️ CLOUDINARY CONFIGURATION (I-update mo ang API Secret kung sakaling iba pa sa Cloudinary dashboard mo)
+cloudinary.config({
+  cloud_name: 'q7iyxzr4',
+  api_key: '454148557875984',
+  api_secret: '454148557875984' 
 });
 
-const facilityStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, facilityFolder),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+// MULTER CLOUDINARY STORAGE
+const sliderStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: { folder: 'resort_sliders', allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'] }
+});
+
+const facilityStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: { 
+    folder: 'resort_facilities', 
+    resource_type: 'auto',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4', 'webm', 'mov'] 
+  }
 });
 
 const uploadSlider = multer({ storage: sliderStorage });
@@ -49,8 +55,57 @@ const uploadFacility = multer({ storage: facilityStorage });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use('/slider-images', express.static(sliderFolder));
-app.use('/facility-images', express.static(facilityFolder));
+
+// 🍃 MONGODB ATLAS CONNECTION
+const MONGO_URI = "mongodb+srv://geraldtolledo6_db_user:DSW1UVljW1d3Fk5S@cluster0.vthil0v.mongodb.net/casa_liezl_resort?retryWrites=true&w=majority";
+
+mongoose.connect(MONGO_URI)
+  .then(() => console.log("✅ Connected to MongoDB Atlas Successfully!"))
+  .catch(err => console.error("❌ MongoDB Connection Error:", err));
+
+// MONGODB SCHEMAS & MODELS
+const resortSchema = new mongoose.Schema({
+  singleton: { type: String, default: "main_config", unique: true },
+  bookings: { type: Array, default: [] },
+  reviews: { 
+    type: Array, 
+    default: [{ id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }] 
+  },
+  facilities: { type: Array, default: [] },
+  rates: { 
+    type: Object, 
+    default: { dayTour: 150, nightTour: 180, overnight: 300 } 
+  },
+  gcashName: { type: String, default: "LIEZL RESORT" },
+  gcashNumber: { type: String, default: "09XX-XXX-XXXX" }
+});
+
+const ResortModel = mongoose.model('ResortConfig', resortSchema);
+
+// HELPER: GET OR CREATE DB DATA
+async function getDB() {
+  let doc = await ResortModel.findOne({ singleton: "main_config" });
+  if (!doc) {
+    doc = new ResortModel({ singleton: "main_config" });
+    await doc.save();
+  }
+  return doc;
+}
+
+async function saveDB(data) {
+  let doc = await ResortModel.findOne({ singleton: "main_config" });
+  if (!doc) {
+    doc = new ResortModel({ singleton: "main_config", ...data });
+  } else {
+    doc.bookings = data.bookings;
+    doc.reviews = data.reviews;
+    doc.facilities = data.facilities;
+    doc.rates = data.rates;
+    doc.gcashName = data.gcashName;
+    doc.gcashNumber = data.gcashNumber;
+  }
+  await doc.save();
+}
 
 function authAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -59,32 +114,6 @@ function authAdmin(req, res, next) {
     return res.status(401).json({ success: false, message: "Unauthorized Admin Access!" });
   }
   next();
-}
-
-function loadDB() {
-  if (!fs.existsSync(dbFile)) {
-    const initialData = {
-      bookings: [],
-      reviews: [{ id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }],
-      facilities: [],
-      rates: { dayTour: 150, nightTour: 180, overnight: 300 },
-      gcashName: "LIEZL RESORT",
-      gcashNumber: "09XX-XXX-XXXX"
-    };
-    fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
-    return initialData;
-  }
-  const data = JSON.parse(fs.readFileSync(dbFile, 'utf8'));
-  if (!data.reviews) data.reviews = [];
-  if (!data.facilities) data.facilities = [];
-  if (!data.rates) data.rates = { dayTour: 150, nightTour: 180, overnight: 300 };
-  if (!data.gcashName) data.gcashName = "LIEZL RESORT";
-  if (!data.gcashNumber) data.gcashNumber = "09XX-XXX-XXXX";
-  return data;
-}
-
-function saveDB(data) { 
-  fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); 
 }
 
 function sendEmailNotification(subject, text) {
@@ -102,14 +131,14 @@ function sendEmailNotification(subject, text) {
 }
 
 // SETTINGS API
-app.get('/api/settings', (req, res) => {
-  const db = loadDB();
+app.get('/api/settings', async (req, res) => {
+  const db = await getDB();
   res.json({ gcashName: db.gcashName, gcashNumber: db.gcashNumber, rates: db.rates });
 });
 
-app.post('/api/admin/settings', authAdmin, (req, res) => {
+app.post('/api/admin/settings', authAdmin, async (req, res) => {
   const { gcashName, gcashNumber, dayTour, nightTour, overnight } = req.body;
-  const db = loadDB();
+  const db = await getDB();
   if (gcashName !== undefined) db.gcashName = String(gcashName).trim();
   if (gcashNumber !== undefined) db.gcashNumber = String(gcashNumber).trim();
   db.rates = {
@@ -117,13 +146,13 @@ app.post('/api/admin/settings', authAdmin, (req, res) => {
     nightTour: parseInt(nightTour) || db.rates.nightTour,
     overnight: parseInt(overnight) || db.rates.overnight
   };
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true, message: "Settings updated successfully!" });
 });
 
 // PDF VOUCHER
-app.get('/api/download-voucher/:id', (req, res) => {
-  const db = loadDB();
+app.get('/api/download-voucher/:id', async (req, res) => {
+  const db = await getDB();
   const booking = db.bookings.find(b => b.id === parseInt(req.params.id));
   if (!booking) return res.status(404).send("Booking voucher not found.");
 
@@ -164,87 +193,104 @@ app.get('/api/download-voucher/:id', (req, res) => {
 });
 
 // REVIEWS APIS
-app.get('/api/reviews', (req, res) => res.json(loadDB().reviews || []));
+app.get('/api/reviews', async (req, res) => {
+  const db = await getDB();
+  res.json(db.reviews || []);
+});
 
-app.post('/api/reviews', (req, res) => {
+app.post('/api/reviews', async (req, res) => {
   const { name, rating, comment } = req.body;
   if (!name || !comment) return res.json({ success: false, message: "Please enter your name and review!" });
 
-  const db = loadDB();
+  const db = await getDB();
   db.reviews.unshift({ id: Date.now(), name: name.trim(), rating: parseInt(rating) || 5, comment: comment.trim(), date: new Date().toLocaleDateString() });
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true, message: "Thank you for your feedback!" });
 });
 
-app.delete('/api/reviews/:id', authAdmin, (req, res) => {
-  const db = loadDB();
+app.delete('/api/reviews/:id', authAdmin, async (req, res) => {
+  const db = await getDB();
   db.reviews = db.reviews.filter(r => r.id !== parseInt(req.params.id));
-  saveDB(db);
+  await saveDB(db);
   res.json({ success: true });
 });
 
-// FACILITIES GALLERY APIS
-app.get('/api/facilities', (req, res) => res.json(loadDB().facilities || []));
+// FACILITIES GALLERY APIS (CLOUD STORAGE)
+app.get('/api/facilities', async (req, res) => {
+  const db = await getDB();
+  res.json(db.facilities || []);
+});
 
-app.post('/upload-facility', uploadFacility.single('facilityMedia'), (req, res) => {
+app.post('/upload-facility', uploadFacility.single('facilityMedia'), async (req, res) => {
   if (!req.file) return res.redirect('/admin.html');
 
   const { facilityTitle, mediaType } = req.body;
-  const db = loadDB();
-  const isVideo = mediaType === 'video' || /\.(mp4|webm|mov)$/i.test(req.file.originalname);
+  const db = await getDB();
+  const isVideo = mediaType === 'video' || req.file.mimetype.startsWith('video');
 
   const newFacility = {
     id: 'fac_' + Date.now(),
     title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
     type: isVideo ? 'video' : 'image',
-    filename: req.file.filename
+    filename: req.file.path // Cloudinary Secure URL
   };
 
   db.facilities.unshift(newFacility);
-  saveDB(db);
+  await saveDB(db);
   res.redirect('/admin.html');
 });
 
-app.delete('/api/facilities/:id', authAdmin, (req, res) => {
-  const db = loadDB();
+app.delete('/api/facilities/:id', authAdmin, async (req, res) => {
+  const db = await getDB();
   const target = db.facilities.find(f => f.id === req.params.id);
 
   if (target) {
-    const filePath = path.join(facilityFolder, target.filename);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    // Extract public_id from Cloudinary URL if needed or just remove from DB array
     db.facilities = db.facilities.filter(f => f.id !== req.params.id);
-    saveDB(db);
+    await saveDB(db);
   }
   res.json({ success: true });
 });
 
 // BOOKED DATES
-app.get('/api/booked-dates', (req, res) => {
-  const db = loadDB();
+app.get('/api/booked-dates', async (req, res) => {
+  const db = await getDB();
   res.json(db.bookings.filter(b => b.status === 'APPROVED').map(b => b.checkInDate));
 });
 
-// SLIDER APIS
-app.get('/api/sliders', (req, res) => {
-  fs.readdir(sliderFolder, (err, files) => {
-    res.json((files || []).filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f)));
-  });
+// SLIDER APIS (CLOUD STORAGE)
+app.get('/api/sliders', async (req, res) => {
+  try {
+    const result = await cloudinary.search
+      .expression('folder:resort_sliders')
+      .sort_by('created_at', 'desc')
+      .execute();
+    const urls = result.resources.map(file => file.secure_url);
+    res.json(urls);
+  } catch (err) {
+    res.json([]);
+  }
 });
 
 app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
 
-app.delete('/api/sliders/:name', authAdmin, (req, res) => {
-  const filePath = path.join(sliderFolder, req.params.name);
-  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  res.json({ success: true });
+app.delete('/api/sliders/:public_id', authAdmin, async (req, res) => {
+  try {
+    // Kung filename o buong url ang pinasa, burahin sa cloudinary
+    const imageId = req.params.public_id;
+    await cloudinary.uploader.destroy(`resort_sliders/${imageId}`);
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: "Delete failed" });
+  }
 });
 
 // BOOKING SUBMISSION API
-app.post('/api/book', (req, res) => {
+app.post('/api/book', async (req, res) => {
   const { name, phone, checkInDate, stayType, packageType, guests, notes, gcashRef } = req.body;
   if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success: false, message: "Please complete all required fields!" });
 
-  const db = loadDB();
+  const db = await getDB();
   if (db.bookings.some(b => b.checkInDate === checkInDate && b.status === 'APPROVED')) {
     return res.json({ success: false, message: "Sorry, this date is already fully booked." });
   }
@@ -264,7 +310,7 @@ app.post('/api/book', (req, res) => {
   };
 
   db.bookings.unshift(bookingObj);
-  saveDB(db);
+  await saveDB(db);
 
   const emailContent = 
     `🌴 BAGONG BOOKING REQUEST - CASA LIEZL PRIVATE RESORT 🌴\n\n` +
@@ -299,18 +345,21 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-app.get('/api/admin/bookings', authAdmin, (req, res) => res.json(loadDB().bookings || []));
+app.get('/api/admin/bookings', authAdmin, async (req, res) => {
+  const db = await getDB();
+  res.json(db.bookings || []);
+});
 
-app.post('/api/admin/process-booking', authAdmin, (req, res) => {
+app.post('/api/admin/process-booking', authAdmin, async (req, res) => {
   const { id, action } = req.body;
-  const db = loadDB();
+  const db = await getDB();
   const target = db.bookings.find(b => b.id === parseInt(id));
   if (!target) return res.status(404).json({ success: false, message: "Booking not found" });
 
   if (action === 'APPROVE') target.status = 'APPROVED';
   else if (action === 'REJECT') target.status = 'REJECTED';
 
-  saveDB(db);
+  await saveDB(db);
 
   sendEmailNotification(
     `[CASA LIEZL PRIVATE] Booking ${target.status}: ${target.name}`,
@@ -320,4 +369,4 @@ app.post('/api/admin/process-booking', authAdmin, (req, res) => {
   res.json({ success: true, status: target.status });
 });
 
-app.listen(PORT, () => console.log(`Casa Liezl Private Resort Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Casa Liezl Private Resort Server running on port ${PORT} with MongoDB & Cloudinary!`));
