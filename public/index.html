@@ -89,24 +89,82 @@
     .weather-temp { font-size: 2rem; font-weight: bold; color: var(--primary-dark); }
     .weather-badge { background: var(--accent); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
-    /* 🏞️ GALLERY STYLES */
-    .gallery-filter { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-    .filter-btn {
-      padding: 8px 18px; border: 1px solid var(--primary); background: transparent;
-      color: var(--primary-dark); border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.3s;
+    /* 🏞️ MANUAL HORIZONTAL SCROLL GALLERY (IMAGES & VIDEOS) */
+    .gallery-carousel-wrapper {
+      position: relative;
+      margin-bottom: 50px;
     }
-    .filter-btn.active, .filter-btn:hover { background: var(--primary); color: #fff; }
-    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 50px; }
-    .gallery-item {
-      position: relative; border-radius: 10px; overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1); height: 200px;
+
+    .gallery-scroll-container {
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding: 10px 5px 20px 5px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) transparent;
     }
-    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
-    .gallery-item:hover img { transform: scale(1.08); }
-    .gallery-caption {
-      position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0,77,77,0.85);
-      color: #fff; padding: 8px 12px; font-size: 0.85rem; font-weight: bold; text-align: center;
+
+    .gallery-scroll-container::-webkit-scrollbar { height: 8px; }
+    .gallery-scroll-container::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+    .gallery-card {
+      flex: 0 0 280px;
+      height: 360px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+      position: relative;
+      display: flex;
+      flex-direction: column;
     }
+
+    .gallery-media-box {
+      width: 100%;
+      height: 290px;
+      background: #000;
+      position: relative;
+    }
+
+    .gallery-media-box img, .gallery-media-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-card-caption {
+      padding: 12px;
+      font-weight: bold;
+      color: var(--primary-dark);
+      font-size: 0.9rem;
+      text-align: center;
+      background: #fff;
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-nav-btn {
+      position: absolute;
+      top: 40%;
+      transform: translateY(-50%);
+      background: rgba(0, 77, 77, 0.85);
+      color: #fff;
+      border: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 10;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .gallery-nav-btn.left { left: -15px; }
+    .gallery-nav-btn.right { right: -15px; }
 
     /* ❓ FAQ STYLES */
     .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
@@ -124,9 +182,8 @@
       transition: max-height 0.3s ease, padding 0.3s ease; color: #555; font-size: 0.93rem;
     }
     .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
-    .faq-item.active .faq-question span { transform: rotate(180deg); }
 
-    /* 💵 RATES & PRICING STYLES */
+    /* 💵 RATES STYLES */
     .rates-card {
       background: linear-gradient(135deg, #008080, #004d4d); color: #fff;
       padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 50px;
@@ -193,6 +250,15 @@
     .date-warning { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; font-weight: bold; }
 
     footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 25px 10px; margin-top: 50px; }
+
+    /* 📱 MOBILE SPECIFIC OPTIMIZATIONS */
+    @media (max-width: 768px) {
+      .hero-overlay h1 { font-size: 2rem; }
+      .hero-overlay p { font-size: 1rem; }
+      .gallery-card { flex: 0 0 240px; height: 320px; }
+      .gallery-media-box { height: 250px; }
+      .gallery-nav-btn { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -223,7 +289,7 @@
 
   <div class="container">
 
-    <!-- ☀️ WEATHER FORECAST WIDGET -->
+    <!-- ☀️ WEATHER WIDGET -->
     <div class="weather-card">
       <div class="weather-info">
         <span style="font-size: 2.2rem;">☀️</span>
@@ -258,25 +324,21 @@
       </div>
     </div>
 
-    <!-- 🏞️ DYNAMIC FACILITIES GALLERY -->
+    <!-- 📸 MANUAL SCROLL RESORT FACILITIES (IMAGE & VIDEO) -->
     <div class="section-title">
-      <h2>📸 Resort Facilities & Tour</h2>
-      <p>Filter by category to explore our resort amenities.</p>
+      <h2>📸 Resort Facilities & Tour (Swipe / Scroll)</h2>
+      <p>Take a look at our resort pools, rooms, and video highlights below.</p>
     </div>
 
-    <div class="gallery-filter">
-      <button class="filter-btn active" onclick="filterGallery('all', this)">All Views</button>
-      <button class="filter-btn" onclick="filterGallery('pools', this)">🏊‍♂️ Swimming Pools</button>
-      <button class="filter-btn" onclick="filterGallery('rooms', this)">🛏️ Aircon Rooms</button>
-      <button class="filter-btn" onclick="filterGallery('cottages', this)">🏡 Cottages & Gazebo</button>
-      <button class="filter-btn" onclick="filterGallery('night', this)">🌙 Night View</button>
+    <div class="gallery-carousel-wrapper">
+      <button class="gallery-nav-btn left" onclick="scrollGallery(-300)">&lt;</button>
+      <div class="gallery-scroll-container" id="galleryContainer">
+        <p style="text-align:center; color:#888; width:100%;">Loading facilities...</p>
+      </div>
+      <button class="gallery-nav-btn right" onclick="scrollGallery(300)">&gt;</button>
     </div>
 
-    <div class="gallery-grid" id="galleryGrid">
-      <p style="text-align:center; color:#888; grid-column:1/-1;">Loading facilities gallery...</p>
-    </div>
-
-    <!-- 💵 RESORT RATES DISPLAY -->
+    <!-- 💵 RATES DISPLAY -->
     <div class="rates-card">
       <h2 style="font-size: 1.8rem;">🏷️ Entrance & Rental Rates</h2>
       <p style="font-size: 0.95rem; opacity: 0.9;">Updated pricing for your stay at Casa Liezl Resort</p>
@@ -299,7 +361,7 @@
       </div>
     </div>
 
-    <!-- 🗓️ INTERACTIVE CALENDAR SECTION -->
+    <!-- 🗓️ CALENDAR SECTION -->
     <div class="section-title">
       <h2>📅 Reservation Schedule Calendar</h2>
       <p>Check available dates before submitting your booking request.</p>
@@ -321,7 +383,7 @@
       </div>
     </div>
 
-    <!-- ❓ FREQUENTLY ASKED QUESTIONS (FAQ SECTION) -->
+    <!-- ❓ FAQ SECTION -->
     <div class="section-title">
       <h2>❓ Frequently Asked Questions (FAQ)</h2>
       <p>Quick answers to common questions about Casa Liezl Resort.</p>
@@ -360,19 +422,9 @@
           After sending your GCash downpayment reference number, our resort team will verify your transaction and update your reservation status. You can also download your official PDF Voucher instantly!
         </div>
       </div>
-
-      <div class="faq-item" onclick="toggleFAQ(this)">
-        <div class="faq-question">
-          4. May available sound system o Videoke facility ba sa resort?
-          <span style="transition:0.3s;">▼</span>
-        </div>
-        <div class="faq-answer">
-          Yes, sound systems and Videoke setups are available upon request depending on your rental package.
-        </div>
-      </div>
     </div>
 
-    <!-- 🗺️ GOOGLE MAPS & LOCATION NAVIGATION SECTION -->
+    <!-- 🗺️ GOOGLE MAPS SECTION -->
     <div class="section-title">
       <h2>📍 Resort Location & Navigation</h2>
       <p>Visit Casa Liezl Resort easily. Tap the navigation links below for exact pin directions.</p>
@@ -544,43 +596,40 @@
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
 
-    // FAQ ACCORDION LOGIC
-    function toggleFAQ(element) {
-      element.classList.toggle('active');
+    function toggleFAQ(element) { element.classList.toggle('active'); }
+
+    // SCROLL FACILITIES CAROUSEL
+    function scrollGallery(val) {
+      document.getElementById('galleryContainer').scrollBy({ left: val, behavior: 'smooth' });
     }
 
-    // DYNAMIC FACILITIES GALLERY LOAD & FILTER
+    // DYNAMIC FACILITIES GALLERY LOAD
     function loadFacilitiesGallery() {
       fetch('/api/facilities')
         .then(r => r.json())
         .then(items => {
-          const grid = document.getElementById('galleryGrid');
+          const container = document.getElementById('galleryContainer');
           if (!items || !items.length) {
-            grid.innerHTML = '<p style="text-align:center; color:#888; grid-column:1/-1;">No photos uploaded yet in Facilities Gallery.</p>';
+            container.innerHTML = '<p style="text-align:center; color:#888; width:100%;">No resort photos or videos uploaded yet.</p>';
             return;
           }
 
-          grid.innerHTML = items.map(item => `
-            <div class="gallery-item" data-category="${item.category}">
-              <img src="/facility-images/${item.filename}" alt="${item.title}">
-              <div class="gallery-caption">${item.title}</div>
-            </div>
-          `).join('');
+          container.innerHTML = items.map(item => {
+            const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
+            const mediaTag = isVid 
+              ? `<video src="/facility-images/${item.filename}" controls preload="metadata"></video>`
+              : `<img src="/facility-images/${item.filename}" alt="${item.title}">`;
+
+            return `
+              <div class="gallery-card">
+                <div class="gallery-media-box">
+                  ${mediaTag}
+                </div>
+                <div class="gallery-card-caption">${item.title}</div>
+              </div>
+            `;
+          }).join('');
         });
-    }
-
-    function filterGallery(category, btn) {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const items = document.querySelectorAll('.gallery-item');
-      items.forEach(item => {
-        if (category === 'all' || item.getAttribute('data-category') === category) {
-          item.style.display = 'block';
-        } else {
-          item.style.display = 'none';
-        }
-      });
     }
 
     // YOUTUBE PLAYMIX API BINDING
@@ -593,9 +642,7 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     function onYouTubeIframeAPIReady() {
-      ytPlayer = new YT.Player('ytIframe', {
-        events: { 'onReady': onPlayerReady }
-      });
+      ytPlayer = new YT.Player('ytIframe', { events: { 'onReady': onPlayerReady } });
     }
 
     function onPlayerReady(event) {
@@ -608,16 +655,13 @@
           document.getElementById('ytPlayBtn').innerText = '⏸';
         }
       };
-
       document.body.addEventListener('click', startAudio, { once: true });
       document.body.addEventListener('touchstart', startAudio, { once: true });
-      document.body.addEventListener('scroll', startAudio, { once: true });
     }
 
     function toggleYTPlaymix() {
       if (!ytPlayer) return;
       var btn = document.getElementById('ytPlayBtn');
-
       if (isPlaying) {
         ytPlayer.pauseVideo();
         isPlaying = false;
@@ -632,100 +676,70 @@
     }
 
     function changeYTVolume(val) {
-      if (ytPlayer && ytPlayer.setVolume) {
-        ytPlayer.setVolume(parseInt(val));
-      }
+      if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(parseInt(val));
     }
 
-    // LOAD SETTINGS (GCASH & RATES)
     function loadSettings() {
-      fetch('/api/settings')
-        .then(r => r.json())
-        .then(s => {
-          document.getElementById('dispGcashName').innerText = s.gcashName || 'LIEZL RESORT';
-          document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09XX-XXX-XXXX';
-          if (s.rates) {
-            document.getElementById('rateDay').innerText = `₱${s.rates.dayTour.toLocaleString()}`;
-            document.getElementById('rateNight').innerText = `₱${s.rates.nightTour.toLocaleString()}`;
-            document.getElementById('rateOvernight').innerText = `₱${s.rates.overnight.toLocaleString()}`;
-          }
-        });
+      fetch('/api/settings').then(r => r.json()).then(s => {
+        document.getElementById('dispGcashName').innerText = s.gcashName || 'LIEZL RESORT';
+        document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09XX-XXX-XXXX';
+        if (s.rates) {
+          document.getElementById('rateDay').innerText = `₱${s.rates.dayTour.toLocaleString()}`;
+          document.getElementById('rateNight').innerText = `₱${s.rates.nightTour.toLocaleString()}`;
+          document.getElementById('rateOvernight').innerText = `₱${s.rates.overnight.toLocaleString()}`;
+        }
+      });
     }
 
-    // CALENDAR LOGIC
     function renderCalendar() {
-      fetch('/api/booked-dates')
-        .then(r => r.json())
-        .then(dates => {
-          disabledDates = dates;
-          const grid = document.getElementById('calendarGrid');
-          const year = currentCalDate.getFullYear();
-          const month = currentCalDate.getMonth();
+      fetch('/api/booked-dates').then(r => r.json()).then(dates => {
+        disabledDates = dates;
+        const grid = document.getElementById('calendarGrid');
+        const year = currentCalDate.getFullYear();
+        const month = currentCalDate.getMonth();
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        document.getElementById('calMonthYear').innerText = `${monthNames[month]} ${year}`;
 
-          const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-          document.getElementById('calMonthYear').innerText = `${monthNames[month]} ${year}`;
+        const firstDay = new Date(year, month, 1).getDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        grid.innerHTML = '';
 
-          const firstDay = new Date(year, month, 1).getDay();
-          const totalDays = new Date(year, month + 1, 0).getDate();
+        for (let i = 0; i < firstDay; i++) grid.innerHTML += `<div class="cal-day empty"></div>`;
 
-          grid.innerHTML = '';
+        for (let day = 1; day <= totalDays; day++) {
+          const mStr = String(month + 1).padStart(2, '0');
+          const dStr = String(day).padStart(2, '0');
+          const fullDateStr = `${year}-${mStr}-${dStr}`;
+          const isBooked = disabledDates.includes(fullDateStr);
+          const classStatus = isBooked ? 'booked' : 'available';
 
-          for (let i = 0; i < firstDay; i++) {
-            grid.innerHTML += `<div class="cal-day empty"></div>`;
-          }
-
-          for (let day = 1; day <= totalDays; day++) {
-            const mStr = String(month + 1).padStart(2, '0');
-            const dStr = String(day).padStart(2, '0');
-            const fullDateStr = `${year}-${mStr}-${dStr}`;
-
-            const isBooked = disabledDates.includes(fullDateStr);
-            const classStatus = isBooked ? 'booked' : 'available';
-
-            grid.innerHTML += `
-              <div class="cal-day ${classStatus}" onclick="selectDateFromCal('${fullDateStr}', ${isBooked})">
-                ${day}
-              </div>
-            `;
-          }
-        });
+          grid.innerHTML += `<div class="cal-day ${classStatus}" onclick="selectDateFromCal('${fullDateStr}', ${isBooked})">${day}</div>`;
+        }
+      });
     }
 
-    function changeCalMonth(delta) {
-      currentCalDate.setMonth(currentCalDate.getMonth() + delta);
-      renderCalendar();
-    }
+    function changeCalMonth(delta) { currentCalDate.setMonth(currentCalDate.getMonth() + delta); renderCalendar(); }
 
     function selectDateFromCal(dateStr, isBooked) {
-      if (isBooked) {
-        alert("Paumanhin! Fully Booked na ang napiling petsa.");
-        return;
-      }
+      if (isBooked) { alert("Paumanhin! Fully Booked na ang napiling petsa."); return; }
       openBookingModal();
       document.getElementById('checkInDate').value = dateStr;
       validateDateSelection();
     }
 
-    // REVIEWS LOGIC
     function loadReviews() {
-      fetch('/api/reviews')
-        .then(r => r.json())
-        .then(reviews => {
-          const grid = document.getElementById('reviewsGrid');
-          if (!reviews.length) {
-            grid.innerHTML = '<p style="text-align:center; color:#888;">No reviews yet. Be the first to leave a feedback!</p>';
-            return;
-          }
-
-          grid.innerHTML = reviews.map(r => `
-            <div class="review-card">
-              <div class="review-stars">${'⭐'.repeat(r.rating)}</div>
-              <div class="review-name">${r.name}</div>
-              <div class="review-date">${r.date}</div>
-              <div class="review-comment">"${r.comment}"</div>
-            </div>
-          `).join('');
-        });
+      fetch('/api/reviews').then(r => r.json()).then(reviews => {
+        const grid = document.getElementById('reviewsGrid');
+        if (!reviews.length) { grid.innerHTML = '<p style="text-align:center; color:#888;">No reviews yet.</p>'; return; }
+        grid.innerHTML = reviews.map(r => `
+          <div class="review-card">
+            <div class="review-stars">${'⭐'.repeat(r.rating)}</div>
+            <div class="review-name">${r.name}</div>
+            <div class="review-date">${r.date}</div>
+            <div class="review-comment">"${r.comment}"</div>
+          </div>
+        `).join('');
+      });
     }
 
     function handleReviewSubmit(e) {
@@ -735,7 +749,6 @@
         rating: document.getElementById('revRating').value,
         comment: document.getElementById('revComment').value
       };
-
       fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -754,53 +767,28 @@
       const selected = document.getElementById('checkInDate').value;
       const warn = document.getElementById('dateWarning');
       const submitBtn = document.getElementById('submitBtn');
-
       if (disabledDates.includes(selected)) {
-        warn.style.display = 'block';
-        submitBtn.disabled = true;
-        submitBtn.style.opacity = '0.5';
-        submitBtn.style.cursor = 'not-allowed';
+        warn.style.display = 'block'; submitBtn.disabled = true; submitBtn.style.opacity = '0.5';
       } else {
-        warn.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        submitBtn.style.cursor = 'pointer';
+        warn.style.display = 'none'; submitBtn.disabled = false; submitBtn.style.opacity = '1';
       }
     }
 
-    function openBookingModal() {
-      renderCalendar();
-      loadSettings();
-      document.getElementById('bookingModal').style.display = 'flex';
-    }
-
-    function openAdminLoginModal() { 
-      document.getElementById('loginError').style.display = 'none';
-      document.getElementById('adminLoginModal').style.display = 'flex'; 
-    }
+    function openBookingModal() { renderCalendar(); loadSettings(); document.getElementById('bookingModal').style.display = 'flex'; }
+    function openAdminLoginModal() { document.getElementById('loginError').style.display = 'none'; document.getElementById('adminLoginModal').style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    function closeConfirmationModal() {
-      document.getElementById('confirmationModal').style.display = 'none';
-      document.getElementById('bookingForm').reset();
-      renderCalendar();
-    }
+    function closeConfirmationModal() { document.getElementById('confirmationModal').style.display = 'none'; document.getElementById('bookingForm').reset(); renderCalendar(); }
 
     function handleAdminLogin(e) {
       e.preventDefault();
       const errBox = document.getElementById('loginError');
       errBox.style.display = 'none';
 
-      const username = document.getElementById('adminUser').value;
-      const password = document.getElementById('adminPass').value;
-
       fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      })
-      .then(r => r.json())
-      .then(d => {
+        body: JSON.stringify({ username: document.getElementById('adminUser').value, password: document.getElementById('adminPass').value })
+      }).then(r => r.json()).then(d => {
         if (d.success) {
           localStorage.setItem('resortAdminToken', d.token);
           window.location.href = '/admin.html';
@@ -811,9 +799,7 @@
       });
     }
 
-    let currentSlide = 0; 
-    let totalSlides = 0;
-    let autoSlideTimer = null;
+    let currentSlide = 0; let totalSlides = 0; let autoSlideTimer = null;
 
     function initSlider() {
       fetch('/api/sliders').then(r => r.json()).then(images => {
@@ -823,9 +809,7 @@
           track.innerHTML = images.map(img => `<img src="/slider-images/${img}" class="slide-img" alt="Resort Image">`).join('');
           dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
           totalSlides = images.length;
-        } else {
-          totalSlides = 1;
-        }
+        } else { totalSlides = 1; }
         startAutoSlide();
       });
     }
@@ -840,19 +824,9 @@
 
     function nextSlide() { goToSlide(currentSlide + 1); }
     function prevSlide() { goToSlide(currentSlide - 1); }
+    function startAutoSlide() { if (totalSlides > 1) autoSlideTimer = setInterval(() => { nextSlide(); }, 4000); }
+    function resetAutoSlide() { clearInterval(autoSlideTimer); startAutoSlide(); }
 
-    function startAutoSlide() {
-      if (totalSlides > 1) {
-        autoSlideTimer = setInterval(() => { nextSlide(); }, 4000);
-      }
-    }
-
-    function resetAutoSlide() {
-      clearInterval(autoSlideTimer);
-      startAutoSlide();
-    }
-
-    // INITIAL CALLS
     initSlider();
     loadSettings();
     renderCalendar();
@@ -886,9 +860,7 @@
           
           document.getElementById('modalDetails').innerHTML = details;
           document.getElementById('confirmationModal').style.display = 'flex';
-        } else {
-          alert(d.message);
-        }
+        } else { alert(d.message); }
       });
     }
   </script>
