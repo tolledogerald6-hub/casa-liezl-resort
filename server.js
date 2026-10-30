@@ -243,7 +243,7 @@ app.delete('/api/sliders/:name', authAdmin, (req, res) => {
 // BOOKING SUBMISSION API
 app.post('/api/book', (req, res) => {
   const { name, phone, checkInDate, stayType, packageType, guests, notes, gcashRef } = req.body;
-  if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success.false, message: "Please complete all required fields!" });
+  if (!name || !phone || !checkInDate || !gcashRef) return res.json({ success: false, message: "Please complete all required fields!" });
 
   const db = loadDB();
   if (db.bookings.some(b => b.checkInDate === checkInDate && b.status === 'APPROVED')) {
