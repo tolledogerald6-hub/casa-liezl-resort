@@ -274,6 +274,16 @@
 
   <button class="floating-book-btn" onclick="openBookingModal()">📅 BOOK NOW</button>
 
+  <!-- 🎵 FLOATING YOUTUBE PLAYMIX WIDGET -->
+  <div id="youtubePlaymixWidget" style="position: fixed; bottom: 85px; right: 25px; background: rgba(0, 77, 77, 0.95); color: #fff; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 998; border: 1px solid rgba(255,255,255,0.2);">
+    <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">▶</button>
+    <span style="font-size: 0.85rem; font-weight: bold;">🌴 Summer Vibes</span>
+    <input type="range" id="ytVolume" min="0" max="100" value="100" oninput="changeYTVolume(this.value)" style="width: 75px; cursor: pointer;">
+  </div>
+
+  <!-- Hidden YouTube Player Container -->
+  <div id="ytplayer" style="position: absolute; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;"></div>
+
   <!-- BOOKING MODAL -->
   <div id="bookingModal" class="modal-overlay">
     <div class="modal-box">
@@ -382,6 +392,55 @@
     let currentCalDate = new Date();
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
+
+    // YOUTUBE PLAYMIX IFRAME LOGIC (Summer Vibes 2026 / Deep House & Chillout)
+    let ytPlayer;
+
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+      ytPlayer = new YT.Player('ytplayer', {
+        height: '0',
+        width: '0',
+        playerVars: {
+          'listType': 'playlist',
+          // 🌴 Summer Vibes 2026 / Uplifting Chillout & Deep House Playlist
+          'list': 'PLDIoUOhQQPlX3c1aH_5P2w4L5t46tX90Z', 
+          'autoplay': 0,
+          'controls': 0,
+          'loop': 1
+        },
+        events: {
+          'onReady': function(event) {
+            ytPlayer.setVolume(100);
+          }
+        }
+      });
+    }
+
+    function toggleYTPlaymix() {
+      if (!ytPlayer) return;
+      var state = ytPlayer.getPlayerState();
+      var btn = document.getElementById('ytPlayBtn');
+
+      if (state === YT.PlayerState.PLAYING) {
+        ytPlayer.pauseVideo();
+        btn.innerText = '▶';
+      } else {
+        ytPlayer.setVolume(100);
+        ytPlayer.playVideo();
+        btn.innerText = '⏸';
+      }
+    }
+
+    function changeYTVolume(val) {
+      if (ytPlayer && ytPlayer.setVolume) {
+        ytPlayer.setVolume(parseInt(val));
+      }
+    }
 
     // LOAD SETTINGS (GCASH & RATES)
     function loadSettings() {
