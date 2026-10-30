@@ -31,18 +31,7 @@
       --success: #28a745;
     }
 
-    /* DARK MODE VARIABLES */
-    [data-theme="dark"] {
-      --primary: #00b3b3;
-      --primary-dark: #008080;
-      --accent: #ff8c66;
-      --bg: #121212;
-      --card-bg: #1e1e1e;
-      --text: #e0e0e0;
-      --border: #333333;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; transition: background 0.3s, color 0.3s; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
     body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
 
@@ -66,12 +55,6 @@
     
     .btn-admin-nav { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
     .btn-admin-nav:hover { background: rgba(255,255,255,0.3); }
-
-    .btn-theme-toggle {
-      background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.5);
-      border-radius: 50%; width: 38px; height: 38px; cursor: pointer; font-size: 1.1rem;
-      display: flex; align-items: center; justify-content: center;
-    }
 
     .hero-section { position: relative; width: 100%; height: 75vh; background: #000; overflow: hidden; }
     .slide-track { display: flex; width: 100%; height: 100%; transition: transform 0.6s ease-in-out; }
@@ -105,7 +88,6 @@
     .container { max-width: 1100px; margin: 0 auto; padding: 50px 20px; }
     .section-title { text-align: center; margin-bottom: 40px; }
     .section-title h2 { font-size: 2.2rem; color: var(--primary-dark); }
-    [data-theme="dark"] .section-title h2 { color: var(--primary); }
 
     .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-bottom: 30px; }
     .feature-card { background: var(--card-bg); border-radius: 12px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid var(--border); text-align: center; }
@@ -117,13 +99,11 @@
       border-radius: 12px; padding: 15px 25px; display: flex; align-items: center;
       justify-content: space-between; margin-bottom: 50px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
-    [data-theme="dark"] .weather-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-color: #334155; color: #fff; }
     .weather-info { display: flex; align-items: center; gap: 15px; }
     .weather-temp { font-size: 2rem; font-weight: bold; color: var(--primary-dark); }
-    [data-theme="dark"] .weather-temp { color: var(--primary); }
     .weather-badge { background: var(--accent); color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
-    /* GALLERY CAROUSEL WITH HOVER EFFECT */
+    /* GALLERY CAROUSEL */
     .gallery-carousel-wrapper { position: relative; margin-bottom: 50px; }
     .gallery-scroll-container {
       display: flex; gap: 18px; overflow-x: auto; scroll-behavior: smooth;
@@ -136,18 +116,14 @@
     .gallery-card {
       flex: 0 0 280px; height: 360px; background: var(--card-bg); border-radius: 12px;
       overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); border: 1px solid var(--border);
-      position: relative; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s ease-in-out;
+      position: relative; display: flex; flex-direction: column;
     }
-    .gallery-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-    
     .gallery-media-box { width: 100%; height: 290px; background: #000; position: relative; }
-    .gallery-media-box img, .gallery-media-box video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+    .gallery-media-box img, .gallery-media-box video { width: 100%; height: 100%; object-fit: cover; }
     .gallery-card-caption {
       padding: 12px; font-weight: bold; color: var(--primary-dark); font-size: 0.9rem;
-      text-align: center; background: var(--card-bg); flex-grow: 1; display: flex; align-items: center; justify-content: center;
+      text-align: center; background: #fff; flex-grow: 1; display: flex; align-items: center; justify-content: center;
     }
-    [data-theme="dark"] .gallery-card-caption { color: var(--primary); }
-    
     .gallery-nav-btn {
       position: absolute; top: 40%; transform: translateY(-50%);
       background: rgba(0, 77, 77, 0.85); color: #fff; border: none; width: 42px; height: 42px;
@@ -156,14 +132,17 @@
     .gallery-nav-btn.left { left: -15px; }
     .gallery-nav-btn.right { right: -15px; }
 
-    /* LIGHTBOX ZOOM MODAL */
-    .lightbox-overlay {
-      display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.9); z-index: 2000; justify-content: center; align-items: center; flex-direction: column; padding: 20px;
+    /* FAQ */
+    .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
+    .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+    .faq-question {
+      padding: 16px 20px; background: #fff; font-weight: bold; color: var(--primary-dark);
+      cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 1rem;
     }
-    .lightbox-content { max-width: 90vw; max-height: 80vh; border-radius: 8px; object-fit: contain; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .lightbox-caption { color: #fff; margin-top: 15px; font-size: 1.1rem; font-weight: bold; text-align: center; }
-    .lightbox-close { position: absolute; top: 20px; right: 30px; background: none; border: none; color: #fff; font-size: 2.5rem; cursor: pointer; }
+    .faq-answer {
+      padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; color: #555; font-size: 0.93rem;
+    }
+    .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
 
     /* RATES */
     .rates-card {
@@ -179,32 +158,16 @@
     .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .calendar-header button { background: var(--primary); color: #fff; border: none; padding: 6px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     .calendar-days-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: var(--primary-dark); margin-bottom: 10px; }
-    [data-theme="dark"] .calendar-days-header { color: var(--primary); }
     .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
     .cal-day {
       padding: 12px 5px; text-align: center; border-radius: 6px; font-weight: bold; font-size: 0.9rem;
-      border: 1px solid var(--border); background: var(--card-bg); cursor: pointer; position: relative;
+      border: 1px solid var(--border); background: #fdfdfd; cursor: pointer; position: relative;
     }
     .cal-day.empty { background: transparent; border: none; cursor: default; }
     .cal-day.available { background: #e8f8f5; border-color: var(--success); color: var(--primary-dark); }
-    [data-theme="dark"] .cal-day.available { background: #064e3b; color: #6ee7b7; border-color: #059669; }
     .cal-day.booked { background: #fde8e8; border-color: var(--danger); color: var(--danger); cursor: not-allowed; }
-    [data-theme="dark"] .cal-day.booked { background: #7f1d1d; color: #fca5a5; border-color: #dc2626; }
     .cal-legend { display: flex; justify-content: center; gap: 20px; margin-top: 15px; font-size: 0.85rem; font-weight: bold; }
     .legend-box { display: inline-block; width: 14px; height: 14px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
-
-    /* FAQ */
-    .faq-container { max-width: 800px; margin: 0 auto 50px auto; }
-    .faq-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
-    .faq-question {
-      padding: 16px 20px; background: var(--card-bg); font-weight: bold; color: var(--primary-dark);
-      cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; font-size: 1rem;
-    }
-    [data-theme="dark"] .faq-question { color: var(--primary); }
-    .faq-answer {
-      padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease; color: var(--text); opacity: 0.85; font-size: 0.93rem;
-    }
-    .faq-item.active .faq-answer { padding: 15px 20px; max-height: 200px; border-top: 1px solid var(--border); }
 
     /* MAP & REVIEWS */
     .map-wrapper { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom: 50px; }
@@ -215,45 +178,41 @@
     .review-card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid var(--accent); }
     .review-stars { color: #f39c12; font-size: 1.1rem; margin-bottom: 8px; }
     .review-name { font-weight: bold; color: var(--primary-dark); font-size: 0.95rem; }
-    [data-theme="dark"] .review-name { color: var(--primary); }
     .review-date { font-size: 0.75rem; color: #888; margin-bottom: 8px; }
-    .review-comment { font-size: 0.9rem; color: var(--text); opacity: 0.9; }
-    
+    .review-comment { font-size: 0.9rem; color: #555; }
     .add-review-box { background: var(--card-bg); padding: 25px; border-radius: 12px; border: 1px solid var(--border); max-width: 600px; margin: 0 auto; }
 
-    /* FLOATING BUTTONS */
     .floating-book-btn {
       position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: #fff; border: none;
       padding: 15px 25px; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; box-shadow: 0 6px 20px rgba(255,127,80,0.5); z-index: 999;
     }
-    
+
+    /* FLOATING MESSENGER BUTTON */
     .floating-messenger-btn {
       position: fixed; bottom: 30px; left: 30px; background: #0084FF; color: #fff; border: none;
       width: 55px; height: 55px; border-radius: 50%; font-size: 1.6rem; cursor: pointer;
       box-shadow: 0 6px 20px rgba(0,132,255,0.4); z-index: 999; display: flex; align-items: center; justify-content: center;
-      text-decoration: none; transition: transform 0.2s;
+      transition: transform 0.2s; text-decoration: none;
     }
     .floating-messenger-btn:hover { transform: scale(1.1); }
 
-    /* MODALS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-    .modal-box { background: var(--card-bg); color: var(--text); padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
-    .close-modal-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text); }
-    
+    .modal-box { background: var(--card-bg); padding: 30px; border-radius: 12px; max-width: 600px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
+    .close-modal-btn { position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #888; }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
-    [data-theme="dark"] .form-group label { color: var(--primary); }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text); }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
     .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .payment-box { background: #e6f2f2; border: 1px dashed var(--primary); padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; }
     
-    .payment-box { background: rgba(0,128,128,0.1); border: 1px dashed var(--primary); padding: 12px; border-radius: 8px; margin-top: 15px; text-align: center; }
-    .btn-copy { background: var(--primary); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-left: 5px; transition: 0.2s; }
+    /* COPY BUTTON STYLE */
+    .btn-copy {
+      background: var(--primary); color: #fff; border: none; padding: 4px 10px;
+      border-radius: 4px; font-size: 0.75rem; cursor: pointer; font-weight: bold; margin-left: 5px;
+    }
     .btn-copy:hover { background: var(--primary-dark); }
-    .btn-copy-all { background: var(--accent); color: #fff; border: none; padding: 8px 15px; border-radius: 5px; font-size: 0.8rem; cursor: pointer; font-weight: bold; margin-top: 10px; display: block; width: 100%; transition: 0.2s; }
-    .btn-copy-all:hover { background: #e0663b; }
 
-    .btn-submit { width: 100%; background: var(--accent); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-    .btn-submit:hover { background: #e0663b; }
+    .btn-submit { width: 100%; background: var(--accent); color: #fff; padding: 12px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-top: 15px; }
     .date-warning { color: var(--danger); font-size: 0.8rem; margin-top: 4px; display: none; font-weight: bold; }
 
     footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 25px 10px; margin-top: 50px; }
@@ -267,13 +226,12 @@
     }
   </style>
 </head>
-<body data-theme="light">
+<body>
 
   <div class="navbar">
     <div class="logo">CASA <span>LIEZL</span> PRIVATE RESORT</div>
     <div class="nav-actions">
-      <button class="btn-theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle Dark/Light Mode">🌙</button>
-      <button class="btn-nav btn-admin-nav" onclick="openAdminLoginModal()">🔐 Admin</button>
+      <button class="btn-nav btn-admin-nav" onclick="openAdminLoginModal()">🔐 Admin Panel</button>
       <button class="btn-nav btn-book-nav" onclick="openBookingModal()">📅 BOOK NOW</button>
     </div>
   </div>
@@ -300,7 +258,7 @@
       <div class="weather-info">
         <span style="font-size: 2.2rem;">☀️</span>
         <div>
-          <div style="font-size: 0.85rem; font-weight: bold;">CASA LIEZL PRIVATE RESORT WEATHER</div>
+          <div style="font-size: 0.85rem; color: #555; font-weight: bold;">CASA LIEZL PRIVATE RESORT WEATHER</div>
           <div class="weather-temp">31°C Sunny</div>
         </div>
       </div>
@@ -331,8 +289,8 @@
     </div>
 
     <div class="section-title">
-      <h2>📸 Resort Facilities & Tour (Tap to Zoom)</h2>
-      <p>Click on any photo or video below to view in fullscreen preview.</p>
+      <h2>📸 Resort Facilities & Tour (Swipe / Scroll)</h2>
+      <p>Take a look at our private pools, rooms, and video highlights below.</p>
     </div>
 
     <div class="gallery-carousel-wrapper">
@@ -343,13 +301,6 @@
       <button class="gallery-nav-btn right" onclick="scrollGallery(300)">&gt;</button>
     </div>
 
-    <!-- LIGHTBOX ZOOM OVERLAY -->
-    <div id="lightboxModal" class="lightbox-overlay" onclick="closeLightbox()">
-      <button class="lightbox-close">&times;</button>
-      <div id="lightboxMediaContainer" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;"></div>
-      <div class="lightbox-caption" id="lightboxCaption"></div>
-    </div>
-
     <div class="rates-card">
       <h2 style="font-size: 1.8rem;">🏷️ Entrance & Rental Rates</h2>
       <p style="font-size: 0.95rem; opacity: 0.9;">Updated pricing for your stay at Casa Liezl Private Resort</p>
@@ -357,17 +308,17 @@
         <div class="rate-box">
           <h4>☀️ Day Tour</h4>
           <p style="font-size: 0.8rem;">8:00 AM - 5:00 PM</p>
-          <div class="rate-price" id="rateDay">₱150</div>
+          <div class="rate-price" id="rateDay">₱1,500</div>
         </div>
         <div class="rate-box">
           <h4>🌙 Night Tour</h4>
           <p style="font-size: 0.8rem;">7:00 PM - 5:00 AM</p>
-          <div class="rate-price" id="rateNight">₱180</div>
+          <div class="rate-price" id="rateNight">₱2,000</div>
         </div>
         <div class="rate-box">
           <h4>🏡 22-Hour Exclusive Stay</h4>
           <p style="font-size: 0.8rem;">Full Staycation Package</p>
-          <div class="rate-price" id="rateOvernight">₱300</div>
+          <div class="rate-price" id="rateOvernight">₱3,500</div>
         </div>
       </div>
     </div>
@@ -549,12 +500,10 @@
         </div>
 
         <div class="payment-box">
-          <h4 style="color: var(--primary); font-size: 0.9rem;">💙 GCASH DOWNPAYMENT DETAILS</h4>
-          <p style="font-size: 0.85rem; margin-top: 5px;">ACCOUNT NAME: <strong id="dispGcashName">LIEZL RESORT</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashName')">Copy</button></p>
-          <p style="font-size: 0.9rem; margin-top: 5px;">GCASH NO: <strong id="dispGcashNum">09XX-XXX-XXXX</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashNum')">Copy</button></p>
-          <button type="button" class="btn-copy-all" onclick="copyAllGcash()">📋 Copy All GCash Details</button>
-          
-          <div class="form-group" style="margin-top: 12px; margin-bottom: 0;">
+          <h4 style="color: var(--primary-dark); font-size: 0.9rem;">💙 GCASH DOWNPAYMENT DETAILS</h4>
+          <p style="font-size: 0.85rem; color: #333;">ACCOUNT NAME: <strong id="dispGcashName">SH***A I.</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashName')">Copy Name</button></p>
+          <p style="font-size: 0.9rem; color: var(--primary-dark); margin-top: 5px;">GCASH NO: <strong id="dispGcashNum">09655247530</strong> <button type="button" class="btn-copy" onclick="copyText('dispGcashNum')">Copy Number</button></p>
+          <div class="form-group" style="margin-top: 10px; margin-bottom: 0;">
             <input type="text" id="gcashRef" required placeholder="Enter GCash Ref No. after sending payment">
           </div>
         </div>
@@ -604,36 +553,13 @@
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
 
-    // THEME TOGGLE LOGIC
-    function toggleTheme() {
-      const body = document.body;
-      const btn = document.getElementById('themeToggleBtn');
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.setAttribute('data-theme', 'light');
-        btn.innerText = '🌙';
-        localStorage.setItem('resortTheme', 'light');
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        btn.innerText = '☀️';
-        localStorage.setItem('resortTheme', 'dark');
-      }
-    }
-
-    if (localStorage.getItem('resortTheme') === 'dark') {
-      document.body.setAttribute('data-theme', 'dark');
-      document.getElementById('themeToggleBtn').innerText = '☀️';
-    }
-
-    // COPY LOGIC
-    function copyText(id) {
-      navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => alert("Copied to clipboard!"));
-    }
-
-    function copyAllGcash() {
-      const name = document.getElementById('dispGcashName').innerText;
-      const num = document.getElementById('dispGcashNum').innerText;
-      const text = `GCash Name: ${name}\nGCash Number: ${num}`;
-      navigator.clipboard.writeText(text).then(() => alert("GCash details copied!"));
+    function copyText(elementId) {
+      const textToCopy = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("Copied to clipboard: " + textToCopy);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
     }
 
     function toggleFAQ(element) { element.classList.toggle('active'); }
@@ -655,12 +581,11 @@
           container.innerHTML = items.map(item => {
             const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
             const mediaTag = isVid 
-              ? `<video src="/facility-images/${item.filename}" preload="metadata"></video>`
+              ? `<video src="/facility-images/${item.filename}" controls preload="metadata"></video>`
               : `<img src="/facility-images/${item.filename}" alt="${item.title}">`;
 
-            // Added onclick for the Lightbox Zoom
             return `
-              <div class="gallery-card" onclick="openLightbox('${item.filename}', '${item.title}', '${item.type}')">
+              <div class="gallery-card">
                 <div class="gallery-media-box">
                   ${mediaTag}
                 </div>
@@ -671,27 +596,6 @@
         });
     }
 
-    // LIGHTBOX ZOOM LOGIC
-    function openLightbox(filename, title, type) {
-      const modal = document.getElementById('lightboxModal');
-      const container = document.getElementById('lightboxMediaContainer');
-      const caption = document.getElementById('lightboxCaption');
-      const isVid = type === 'video' || /\.(mp4|webm|mov)$/i.test(filename);
-
-      container.innerHTML = isVid 
-        ? `<video src="/facility-images/${filename}" class="lightbox-content" controls autoplay></video>`
-        : `<img src="/facility-images/${filename}" class="lightbox-content" alt="${title}">`;
-      
-      caption.innerText = title;
-      modal.style.display = 'flex';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightboxModal').style.display = 'none';
-      document.getElementById('lightboxMediaContainer').innerHTML = '';
-    }
-
-    // YOUTUBE MUSIC WIDGET
     let ytPlayer;
     let isPlaying = false;
     var tag = document.createElement('script');
@@ -739,8 +643,8 @@
 
     function loadSettings() {
       fetch('/api/settings').then(r => r.json()).then(s => {
-        document.getElementById('dispGcashName').innerText = s.gcashName || 'LIEZL RESORT';
-        document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09XX-XXX-XXXX';
+        document.getElementById('dispGcashName').innerText = s.gcashName || 'SH***A I.';
+        document.getElementById('dispGcashNum').innerText = s.gcashNumber || '09655247530';
         if (s.rates) {
           document.getElementById('rateDay').innerText = `₱${s.rates.dayTour.toLocaleString()}`;
           document.getElementById('rateNight').innerText = `₱${s.rates.nightTour.toLocaleString()}`;
@@ -864,7 +768,7 @@
         const track = document.getElementById('slideTrack');
         const dots = document.getElementById('sliderDots');
         if (images && images.length > 0) {
-          track.innerHTML = images.map(img => `<img src="${img}" class="slide-img" alt="Resort Image">`).join('');
+          track.innerHTML = images.map(img => `<img src="/slider-images/${img}" class="slide-img" alt="Resort Image">`).join('');
           dots.innerHTML = images.map((_, i) => `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`).join('');
           totalSlides = images.length;
         } else { totalSlides = 1; }
