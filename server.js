@@ -18,7 +18,7 @@ const GMAIL_APP_PASS = process.env.GMAIL_APP_PASS || "xtds hcbx rdrv vjbt";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  auth: { user: RESORT_EMAIL, pass: GMAIL_APP_PASS }
+  auth: { user: RESORT_EMAIL, pass: "hmne chka znph hbok" }
 });
 
 // 🔒 MULTI-DEVICE ADMIN SESSIONS
