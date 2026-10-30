@@ -77,7 +77,7 @@ function loadDB() {
   const data = JSON.parse(fs.readFileSync(dbFile, 'utf8'));
   if (!data.reviews) data.reviews = [];
   if (!data.facilities) data.facilities = [];
-  if (!data.rates) data.rates = { dayTour: 1500, nightTour: 2000, overnight: 3500 };
+  if (!data.rates) data.rates = { dayTour: 300, nightTour: 350, overnight: 3000 };
   if (!data.gcashName) data.gcashName = "SH***A I.";
   if (!data.gcashNumber) data.gcashNumber = "09655247530";
   return data;
