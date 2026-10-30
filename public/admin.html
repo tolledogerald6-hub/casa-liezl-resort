@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASA LIEZL RESORT - Admin Dashboard</title>
+  <style>
+    :root {
+      --primary: #008080;
+      --primary-dark: #004d4d;
+      --accent: #ff7f50;
+      --bg: #f4f7f6;
+      --card-bg: #ffffff;
+      --text: #333333;
+      --border: #dddddd;
+      --success: #28a745;
+      --danger: #dc3545;
+      --warning: #ffc107;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body { background-color: var(--bg); color: var(--text); padding: 20px; }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--card-bg); padding: 15px 20px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+    }
+    .header h2 { color: var(--primary); }
+
+    .btn-logout {
+      background: var(--danger); color: #fff; border: none;
+      padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
+    }
+
+    #loginOverlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7); display: flex; justify-content: center;
+      align-items: center; z-index: 999;
+    }
+
+    .login-box {
+      background: #fff; padding: 30px; border-radius: 10px;
+      width: 90%; max-width: 380px; text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .login-box h3 { color: var(--primary); margin-bottom: 15px; }
+    .login-box input {
+      width: 100%; padding: 10px; margin-bottom: 12px;
+      border: 1px solid var(--border); border-radius: 5px; font-size: 0.95rem;
+    }
+
+    .btn-login {
+      width: 100%; background: var(--primary); color: #fff;
+      padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+    }
+
+    .section-box {
+      background: var(--card-bg); padding: 20px; border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px;
+    }
+    .section-box h3 { color: var(--primary-dark); margin-bottom: 12px; }
+
+    .slider-upload-form { display: flex; gap: 10px; margin-bottom: 15px; }
+
+    .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+    .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); }
+    .slider-card img { width: 100%; height: 100px; object-fit: cover; }
+
+    .btn-del-img {
+      position: absolute; top: 5px; right: 5px; background: var(--danger);
+      color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem;
+    }
+
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    th { background: #e6f2f2; color: var(--primary-dark); }
+
+    .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+    .badge-pending { background: var(--warning); color: #000; }
+    .badge-approved { background: var(--success); color: #fff; }
+    .badge-rejected { background: var(--danger); color: #fff; }
+
+    .btn-action { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 3px; }
+    .btn-approve { background: var(--success); color: #fff; }
+    .btn-reject { background: var(--danger); color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div id="loginOverlay">
+    <div class="login-box">
+      <h3>🔒 CASA LIEZL ADMIN</h3>
+      <form onsubmit="loginAdmin(event)">
+        <input type="text" id="adminUser" required placeholder="Username">
+        <input type="password" id="adminPass" required placeholder="Password">
+        <button type="submit" class="btn-login">LOGIN</button>
+        <div id="loginErr" style="color: var(--danger); font-size: 0.8rem; margin-top: 10px;"></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="container" id="adminDashboard" style="display: none;">
+    <div class="header">
+      <h2>🌴 Casa Liezl Resort - Admin Dashboard</h2>
+      <button class="btn-logout" onclick="logoutAdmin()">LOGOUT</button>
+    </div>
+
+    <!-- ⚙️ RESORT SETTINGS & RATES -->
+    <div class="section-box">
+      <h3>⚙️ GCash & Resort Rates Settings</h3>
+      <form onsubmit="saveSettings(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>GCash Account Name</label>
+            <input type="text" id="setGcashName" required>
+          </div>
+          <div class="form-group">
+            <label>GCash Number</label>
+            <input type="text" id="setGcashNum" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Day Tour Rate (₱)</label>
+            <input type="number" id="setRateDay" required>
+          </div>
+          <div class="form-group">
+            <label>Night Tour Rate (₱)</label>
+            <input type="number" id="setRateNight" required>
+          </div>
+          <div class="form-group">
+            <label>24-Hour Overnight Rate (₱)</label>
+            <input type="number" id="setRateOvernight" required>
+          </div>
+        </div>
+        <button type="submit" class="btn-action btn-approve" style="padding: 10px 20px; font-size: 0.85rem;">SAVE SETTINGS</button>
+      </form>
+    </div>
+
+    <!-- 📸 SLIDER IMAGES MANAGEMENT -->
+    <div class="section-box">
+      <h3>📸 Upload Resort Slide Pictures (Homepage Banner)</h3>
+      <form action="/upload-slider" method="POST" enctype="multipart/form-data" class="slider-upload-form">
+        <input type="file" name="sliderImage" accept="image/*" required style="padding: 5px;">
+        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD PICTURE</button>
+      </form>
+      
+      <div class="slider-grid" id="sliderImagesGrid"></div>
+    </div>
+
+    <!-- 📋 BOOKINGS MANAGEMENT -->
+    <div class="section-box">
+      <h3>📋 Listahan ng mga Reservations</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Guest Name</th>
+              <th>Contact</th>
+              <th>Check-in Date & Shift</th>
+              <th>Package & Pax</th>
+              <th>GCash Ref No.</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsTableBody">
+            <tr><td colspan="7" style="text-align:center;">Loading reservations...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 💬 REVIEWS MANAGEMENT -->
+    <div class="section-box">
+      <h3>⭐ Customer Reviews Management</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Rating</th>
+              <th>Comment</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="reviewsTableBody">
+            <tr><td colspan="5" style="text-align:center;">Loading reviews...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let authToken = localStorage.getItem('resortAdminToken') || "";
+
+    if (authToken) { showDashboard(); }
+
+    function loginAdmin(e) {
+      if (e) e.preventDefault();
+      const username = document.getElementById('adminUser').value;
+      const password = document.getElementById('adminPass').value;
+
+      fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) {
+          authToken = d.token;
+          localStorage.setItem('resortAdminToken', authToken);
+          showDashboard();
+        } else {
+          document.getElementById('loginErr').innerText = d.message || "Invalid Credentials!";
+        }
+      });
+    }
+
+    function logoutAdmin() {
+      localStorage.removeItem('resortAdminToken');
+      window.location.href = '/';
+    }
+
+    function showDashboard() {
+      document.getElementById('loginOverlay').style.display = 'none';
+      document.getElementById('adminDashboard').style.display = 'block';
+      loadSettings();
+      loadBookings();
+      loadSliderAdmin();
+      loadAdminReviews();
+      setInterval(loadBookings, 5000);
+    }
+
+    function loadSettings() {
+      fetch('/api/settings')
+        .then(r => r.json())
+        .then(s => {
+          document.getElementById('setGcashName').value = s.gcashName || '';
+          document.getElementById('setGcashNum').value = s.gcashNumber || '';
+          if (s.rates) {
+            document.getElementById('setRateDay').value = s.rates.dayTour || 1500;
+            document.getElementById('setRateNight').value = s.rates.nightTour || 2000;
+            document.getElementById('setRateOvernight').value = s.rates.overnight || 3500;
+          }
+        });
+    }
+
+    function saveSettings(e) {
+      e.preventDefault();
+      const payload = {
+        gcashName: document.getElementById('setGcashName').value,
+        gcashNumber: document.getElementById('setGcashNum').value,
+        dayTour: document.getElementById('setRateDay').value,
+        nightTour: document.getElementById('setRateNight').value,
+        overnight: document.getElementById('setRateOvernight').value
+      };
+
+      fetch('/api/admin/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(r => r.json())
+      .then(d => {
+        alert(d.message);
+      });
+    }
+
+    function loadSliderAdmin() {
+      fetch('/api/sliders').then(r => r.json()).then(images => {
+        const grid = document.getElementById('sliderImagesGrid');
+        if (!images.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">Wala pang na-upload na picture.</p>'; return; }
+        
+        grid.innerHTML = images.map(img => `
+          <div class="slider-card">
+            <img src="/slider-images/${img}">
+            <button class="btn-del-img" onclick="deleteSlider('${img}')">🗑️ Delete</button>
+          </div>
+        `).join('');
+      });
+    }
+
+    function deleteSlider(filename) {
+      if(!confirm("Sigurado ka bang buburahin ang larawang ito?")) return;
+      fetch(`/api/sliders/${filename}`, { method: 'DELETE' }).then(() => loadSliderAdmin());
+    }
+
+    function loadAdminReviews() {
+      fetch('/api/reviews').then(r => r.json()).then(reviews => {
+        const tbody = document.getElementById('reviewsTableBody');
+        if (!reviews.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Wala pang reviews.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = reviews.map(r => `
+          <tr>
+            <td><small style="color:#777;">${r.date}</small></td>
+            <td><strong>${r.name}</strong></td>
+            <td><span style="color:#f39c12;">${'⭐'.repeat(r.rating)}</span></td>
+            <td>${r.comment}</td>
+            <td><button class="btn-action btn-reject" onclick="deleteReview(${r.id})">Delete</button></td>
+          </tr>
+        `).join('');
+      });
+    }
+
+    function deleteReview(id) {
+      if(!confirm("Sigurado ka bang buburahin ang review na ito?")) return;
+      fetch(`/api/reviews/${id}`, { method: 'DELETE' }).then(() => loadAdminReviews());
+    }
+
+    function loadBookings() {
+      fetch('/api/admin/bookings')
+        .then(r => r.json())
+        .then(bookings => {
+          const tbody = document.getElementById('bookingsTableBody');
+          if (!bookings.length) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Wala pang booking requests.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = bookings.map(b => {
+            let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
+            if (b.status === 'APPROVED') statusBadge = `<span class="badge badge-approved">APPROVED</span>`;
+            if (b.status === 'REJECTED') statusBadge = `<span class="badge badge-rejected">REJECTED</span>`;
+
+            let actionBtns = '';
+            if (b.status === 'PENDING') {
+              actionBtns = `
+                <button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button>
+                <button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>
+              `;
+            } else {
+              actionBtns = `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
+            }
+
+            return `
+              <tr>
+                <td><strong>${b.name}</strong><br><small style="color:#777;">${b.createdAt}</small></td>
+                <td>${b.phone}</td>
+                <td><strong>${b.checkInDate}</strong><br><small>${b.stayType}</small></td>
+                <td>${b.packageType}<br><small>(${b.guests} Guests)</small></td>
+                <td><strong style="color:var(--primary);">${b.gcashRef}</strong></td>
+                <td>${statusBadge}</td>
+                <td>${actionBtns}</td>
+              </tr>
+            `;
+          }).join('');
+        });
+    }
+
+    function processBooking(id, action) {
+      if (!confirm(`Sigurado ka bang gusto mong i-${action} ang booking na ito?`)) return;
+
+      fetch('/api/admin/process-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action })
+      })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) loadBookings();
+      });
+    }
+  </script>
+</body>
+</html>
