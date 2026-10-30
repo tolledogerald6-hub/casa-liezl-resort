@@ -12,9 +12,9 @@ const PORT = process.env.PORT || 4000;
 const ADMIN_USER = "ADMIN";
 const ADMIN_PASS = "LIEZL2026!";
 
-// 📧 EMAIL CONFIGURATION (NAKAPAG-SET NA NG APP PASSWORD MO)
+// 📧 EMAIL CONFIGURATION (PINAGSAMA AT INALISAN NG SPACES ANG APP PASSWORD)
 const RESORT_EMAIL = "tolledogerald6@gmail.com";
-const GMAIL_APP_PASS = "hmne chka znph hbok";
+const GMAIL_APP_PASS = "hmnechkaznphhbok"; // Walang spaces para iwas authentication error
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -88,7 +88,7 @@ function saveDB(data) {
   fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); 
 }
 
-// 📧 AUTO SEND GMAIL NOTIFICATION FUNCTION
+// 📧 AUTO SEND GMAIL NOTIFICATION FUNCTION (MAY ERROR LOGGING)
 function sendEmailNotification(subject, text) {
   const mailOptions = {
     from: `"Casa Liezl Resort System" <${RESORT_EMAIL}>`,
@@ -98,8 +98,11 @@ function sendEmailNotification(subject, text) {
   };
 
   transporter.sendMail(mailOptions, (err, info) => {
-    if (err) console.log("Email Notification Error:", err.message);
-    else console.log("Email Sent Successfully:", info.response);
+    if (err) {
+      console.error("❌ Email Sending Failed Error:", err);
+    } else {
+      console.log("✅ Email Sent Successfully Response:", info.response);
+    }
   });
 }
 
