@@ -276,13 +276,16 @@
 
   <!-- 🎵 FLOATING YOUTUBE PLAYMIX WIDGET -->
   <div id="youtubePlaymixWidget" style="position: fixed; bottom: 85px; right: 25px; background: rgba(0, 77, 77, 0.95); color: #fff; padding: 10px 16px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 10px; z-index: 998; border: 1px solid rgba(255,255,255,0.2);">
-    <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">⏸</button>
+    <button id="ytPlayBtn" onclick="toggleYTPlaymix()" style="background: var(--accent, #ff7f50); border: none; color: #fff; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; font-weight: bold; display: flex; align-items: center; justify-content: center;">▶</button>
     <span style="font-size: 0.85rem; font-weight: bold;">🌴 Summer Vibes</span>
     <input type="range" id="ytVolume" min="0" max="100" value="10" oninput="changeYTVolume(this.value)" style="width: 75px; cursor: pointer;">
   </div>
 
-  <!-- Hidden YouTube Player Container -->
-  <div id="ytplayer" style="position: absolute; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;"></div>
+  <!-- Hidden YouTube Player Iframe -->
+  <iframe id="ytIframe" width="1" height="1" style="position: absolute; opacity: 0; pointer-events: none;" 
+    src="https://www.youtube.com/embed/MG6qV0sDpxU?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=MG6qV0sDpxU" 
+    allow="autoplay">
+  </iframe>
 
   <!-- BOOKING MODAL -->
   <div id="bookingModal" class="modal-overlay">
@@ -393,8 +396,9 @@
 
     document.getElementById('checkInDate').min = new Date().toISOString().split('T')[0];
 
-    // YOUTUBE PLAYMIX LOGIC (10% Volume + Autoplay Bypass)
+    // DIRECT YOUTUBE API AUDIO BINDING
     let ytPlayer;
+    let isPlaying = false;
 
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -402,16 +406,7 @@
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     function onYouTubeIframeAPIReady() {
-      ytPlayer = new YT.Player('ytplayer', {
-        height: '0',
-        width: '0',
-        playerVars: {
-          'listType': 'playlist',
-          'list': 'PLDIoUOhQQPlX3c1aH_5P2w4L5t46tX90Z', 
-          'autoplay': 1,
-          'controls': 0,
-          'loop': 1
-        },
+      ytPlayer = new YT.Player('ytIframe', {
         events: {
           'onReady': onPlayerReady
         }
@@ -419,31 +414,35 @@
     }
 
     function onPlayerReady(event) {
-      // Set to 10% volume instantly
-      ytPlayer.setVolume(10);
-      ytPlayer.playVideo();
-
-      // Fallback for strict browser autoplay restriction
-      document.body.addEventListener('click', function() {
-        if (ytPlayer && ytPlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
-          ytPlayer.setVolume(10);
+      // Direct click interaction trigger to un-mute and start audio
+      const startAudio = () => {
+        if (ytPlayer && !isPlaying) {
+          ytPlayer.unMute();
+          ytPlayer.setVolume(10); // 10% Volume
           ytPlayer.playVideo();
+          isPlaying = true;
           document.getElementById('ytPlayBtn').innerText = '⏸';
         }
-      }, { once: true });
+      };
+
+      document.body.addEventListener('click', startAudio, { once: true });
+      document.body.addEventListener('touchstart', startAudio, { once: true });
+      document.body.addEventListener('scroll', startAudio, { once: true });
     }
 
     function toggleYTPlaymix() {
       if (!ytPlayer) return;
-      var state = ytPlayer.getPlayerState();
       var btn = document.getElementById('ytPlayBtn');
 
-      if (state === YT.PlayerState.PLAYING) {
+      if (isPlaying) {
         ytPlayer.pauseVideo();
+        isPlaying = false;
         btn.innerText = '▶';
       } else {
-        ytPlayer.setVolume(10);
+        ytPlayer.unMute();
+        ytPlayer.setVolume(parseInt(document.getElementById('ytVolume').value || 10));
         ytPlayer.playVideo();
+        isPlaying = true;
         btn.innerText = '⏸';
       }
     }
