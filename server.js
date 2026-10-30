@@ -67,9 +67,9 @@ function loadDB() {
       bookings: [],
       reviews: [{ id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }],
       facilities: [],
-      rates: { dayTour: 1500, nightTour: 2000, overnight: 3500 },
-      gcashName: "SH***A I.",
-      gcashNumber: "09655247530"
+      rates: { dayTour: 150, nightTour: 180, overnight: 300 },
+      gcashName: "LIEZL RESORT",
+      gcashNumber: "09XX-XXX-XXXX"
     };
     fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
     return initialData;
@@ -77,9 +77,9 @@ function loadDB() {
   const data = JSON.parse(fs.readFileSync(dbFile, 'utf8'));
   if (!data.reviews) data.reviews = [];
   if (!data.facilities) data.facilities = [];
-  if (!data.rates) data.rates = { dayTour: 1500, nightTour: 2000, overnight: 3500 };
-  if (!data.gcashName) data.gcashName = "SH***A I.";
-  if (!data.gcashNumber) data.gcashNumber = "09655247530";
+  if (!data.rates) data.rates = { dayTour: 150, nightTour: 180, overnight: 300 };
+  if (!data.gcashName) data.gcashName = "LIEZL RESORT";
+  if (!data.gcashNumber) data.gcashNumber = "09XX-XXX-XXXX";
   return data;
 }
 
