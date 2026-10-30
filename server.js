@@ -12,13 +12,13 @@ const PORT = process.env.PORT || 4000;
 const ADMIN_USER = "ADMIN";
 const ADMIN_PASS = "LIEZL2026!";
 
-// 📧 EMAIL CONFIGURATION (AUTO-SEND GMAIL)
+// 📧 EMAIL CONFIGURATION (NAKAPAG-SET NA NG APP PASSWORD MO)
 const RESORT_EMAIL = "tolledogerald6@gmail.com";
-const GMAIL_APP_PASS = process.env.GMAIL_APP_PASS || "xtds hcbx rdrv vjbt";
+const GMAIL_APP_PASS = "hmne chka znph hbok";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
-  auth: { user: RESORT_EMAIL, pass: "hmne chka znph hbok" }
+  auth: { user: RESORT_EMAIL, pass: GMAIL_APP_PASS }
 });
 
 // 🔒 MULTI-DEVICE ADMIN SESSIONS
@@ -290,7 +290,7 @@ app.post('/api/admin/login', (req, res) => {
   const { username, password } = req.body;
   if ((username || '').trim().toUpperCase() === ADMIN_USER && (password || '').trim() === ADMIN_PASS) {
     const token = crypto.randomBytes(32).toString('hex');
-    activeSessions.add(token); // Pinapayagan ang multi-device concurrent login
+    activeSessions.add(token);
 
     if (activeSessions.size > 50) {
       const firstToken = activeSessions.values().next().value;
