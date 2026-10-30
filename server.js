@@ -1,5 +1,5 @@
 const express = require('express');
-const multer = require('multer');
+const multer  = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -24,56 +24,23 @@ const transporter = nodemailer.createTransport({
 // 🔒 MULTI-DEVICE ADMIN SESSIONS
 let activeSessions = new Set();
 
-// 📂 LOCAL DATABASE FILE PATH
-const DB_FILE = path.join(__dirname, 'resort_db.json');
+const dbFile = path.join(__dirname, 'resort_db.json');
+const uploadFolder = path.join(__dirname, 'public', 'uploads');
+const sliderFolder = path.join(__dirname, 'public', 'uploads', 'slider');
+const facilityFolder = path.join(__dirname, 'public', 'uploads', 'facility');
 
-function loadDB() {
-  if (!fs.existsSync(DB_FILE)) {
-    const initialData = {
-      bookings: [],
-      reviews: [
-        { id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }
-      ],
-      facilities: [],
-      rates: { dayTour: 300, nightTour: 350, overnight: 3000 },
-      gcashName: "SH***A I.",
-      gcashNumber: "09655247530"
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialData, null, 2));
-  }
-  try {
-    const data = fs.readFileSync(DB_FILE, 'utf8');
-    return JSON.parse(data);
-  } catch (err) {
-    console.error("Error reading DB:", err);
-    return { bookings: [], reviews: [], facilities: [], rates: { dayTour: 300, nightTour: 350, overnight: 3000 }, gcashName: "SH***A I.", gcashNumber: "09655247530" };
-  }
-}
-
-function saveDB(data) {
-  try {
-    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-  } catch (err) {
-    console.error("Error saving DB:", err);
-  }
-}
-
-// 📁 LOCAL STORAGE SETUP
-const uploadDir = path.join(__dirname, 'public', 'uploads');
-const sliderDir = path.join(uploadDir, 'sliders');
-const facilityDir = path.join(uploadDir, 'facilities');
-
-if (!fs.existsSync(sliderDir)) fs.mkdirSync(sliderDir, { recursive: true });
-if (!fs.existsSync(facilityDir)) fs.mkdirSync(facilityDir, { recursive: true });
+if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
+if (!fs.existsSync(sliderFolder)) fs.mkdirSync(sliderFolder, { recursive: true });
+if (!fs.existsSync(facilityFolder)) fs.mkdirSync(facilityFolder, { recursive: true });
 
 const sliderStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, sliderDir),
-  filename: (req, file, cb) => cb(null, 'slider_' + Date.now() + path.extname(file.originalname))
+  destination: (req, file, cb) => cb(null, sliderFolder),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 
 const facilityStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, facilityDir),
-  filename: (req, file, cb) => cb(null, 'fac_' + Date.now() + path.extname(file.originalname))
+  destination: (req, file, cb) => cb(null, facilityFolder),
+  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
 });
 
 const uploadSlider = multer({ storage: sliderStorage });
@@ -82,9 +49,8 @@ const uploadFacility = multer({ storage: facilityStorage });
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
-// Serve uploaded images statically
-app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
+app.use('/slider-images', express.static(sliderFolder));
+app.use('/facility-images', express.static(facilityFolder));
 
 function authAdmin(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -93,6 +59,32 @@ function authAdmin(req, res, next) {
     return res.status(401).json({ success: false, message: "Unauthorized Admin Access!" });
   }
   next();
+}
+
+function loadDB() {
+  if (!fs.existsSync(dbFile)) {
+    const initialData = {
+      bookings: [],
+      reviews: [{ id: 1, name: "Maria Clara", rating: 5, comment: "Napakaganda ng resort! Malinis ang tubig at mabait ang owner.", date: "10/24/2026" }],
+      facilities: [],
+      rates: { dayTour: 1500, nightTour: 2000, overnight: 3500 },
+      gcashName: "SH***A I.",
+      gcashNumber: "09655247530"
+    };
+    fs.writeFileSync(dbFile, JSON.stringify(initialData, null, 2));
+    return initialData;
+  }
+  const data = JSON.parse(fs.readFileSync(dbFile, 'utf8'));
+  if (!data.reviews) data.reviews = [];
+  if (!data.facilities) data.facilities = [];
+  if (!data.rates) data.rates = { dayTour: 1500, nightTour: 2000, overnight: 3500 };
+  if (!data.gcashName) data.gcashName = "SH***A I.";
+  if (!data.gcashNumber) data.gcashNumber = "09655247530";
+  return data;
+}
+
+function saveDB(data) { 
+  fs.writeFileSync(dbFile, JSON.stringify(data, null, 2)); 
 }
 
 function sendEmailNotification(subject, text) {
@@ -172,10 +164,7 @@ app.get('/api/download-voucher/:id', (req, res) => {
 });
 
 // REVIEWS APIS
-app.get('/api/reviews', (req, res) => {
-  const db = loadDB();
-  res.json(db.reviews || []);
-});
+app.get('/api/reviews', (req, res) => res.json(loadDB().reviews || []));
 
 app.post('/api/reviews', (req, res) => {
   const { name, rating, comment } = req.body;
@@ -195,40 +184,33 @@ app.delete('/api/reviews/:id', authAdmin, (req, res) => {
 });
 
 // FACILITIES GALLERY APIS
-app.get('/api/facilities', (req, res) => {
-  const db = loadDB();
-  res.json(db.facilities || []);
-});
+app.get('/api/facilities', (req, res) => res.json(loadDB().facilities || []));
 
 app.post('/upload-facility', uploadFacility.single('facilityMedia'), (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin.html?error=nofile');
+  if (!req.file) return res.redirect('/admin.html');
 
-    const { facilityTitle, mediaType } = req.body;
-    const db = loadDB();
-    const isVideo = mediaType === 'video' || req.file.mimetype.startsWith('video');
+  const { facilityTitle, mediaType } = req.body;
+  const db = loadDB();
+  const isVideo = mediaType === 'video' || /\.(mp4|webm|mov)$/i.test(req.file.originalname);
 
-    const newFacility = {
-      id: 'fac_' + Date.now(),
-      title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
-      type: isVideo ? 'video' : 'image',
-      filename: '/uploads/facilities/' + req.file.filename
-    };
+  const newFacility = {
+    id: 'fac_' + Date.now(),
+    title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
+    type: isVideo ? 'video' : 'image',
+    filename: req.file.filename
+  };
 
-    db.facilities.unshift(newFacility);
-    saveDB(db);
-    res.redirect('/admin.html');
-  } catch (err) {
-    console.error("Facility Upload Error:", err);
-    res.redirect('/admin.html?error=upload_failed');
-  }
+  db.facilities.unshift(newFacility);
+  saveDB(db);
+  res.redirect('/admin.html');
 });
 
 app.delete('/api/facilities/:id', authAdmin, (req, res) => {
   const db = loadDB();
   const target = db.facilities.find(f => f.id === req.params.id);
+
   if (target) {
-    const filePath = path.join(__dirname, 'public', target.filename);
+    const filePath = path.join(facilityFolder, target.filename);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
     db.facilities = db.facilities.filter(f => f.id !== req.params.id);
     saveDB(db);
@@ -244,29 +226,17 @@ app.get('/api/booked-dates', (req, res) => {
 
 // SLIDER APIS
 app.get('/api/sliders', (req, res) => {
-  try {
-    if (!fs.existsSync(sliderDir)) return res.json([]);
-    const files = fs.readdirSync(sliderDir);
-    const urls = files.map(file => '/uploads/sliders/' + file);
-    res.json(urls);
-  } catch (err) {
-    res.json([]);
-  }
+  fs.readdir(sliderFolder, (err, files) => {
+    res.json((files || []).filter(f => /\.(jpg|jpeg|png|webp|gif)$/i.test(f)));
+  });
 });
 
-app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => {
-  res.redirect('/admin.html');
-});
+app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
 
-app.delete('/api/sliders/:filename', authAdmin, (req, res) => {
-  try {
-    const filename = req.params.filename;
-    const filePath = path.join(sliderDir, filename);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-    res.json({ success: true });
-  } catch (err) {
-    res.json({ success: false, message: "Delete failed" });
-  }
+app.delete('/api/sliders/:name', authAdmin, (req, res) => {
+  const filePath = path.join(sliderFolder, req.params.name);
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  res.json({ success: true });
 });
 
 // BOOKING SUBMISSION API
@@ -308,7 +278,7 @@ app.post('/api/book', (req, res) => {
 
   sendEmailNotification(`[CASA LIEZL PRIVATE] New Booking Request from ${bookingObj.name}`, emailContent);
 
-  res.json({ success: true, message: "Reservation request successfully submitted!", bookingId: bookingObj.id });
+  res.json({ success: true, message: "Reservation request submitted successfully!", bookingId: bookingObj.id });
 });
 
 // ADMIN APIS
@@ -329,10 +299,7 @@ app.post('/api/admin/login', (req, res) => {
   }
 });
 
-app.get('/api/admin/bookings', authAdmin, (req, res) => {
-  const db = loadDB();
-  res.json(db.bookings || []);
-});
+app.get('/api/admin/bookings', authAdmin, (req, res) => res.json(loadDB().bookings || []));
 
 app.post('/api/admin/process-booking', authAdmin, (req, res) => {
   const { id, action } = req.body;
@@ -353,4 +320,4 @@ app.post('/api/admin/process-booking', authAdmin, (req, res) => {
   res.json({ success: true, status: target.status });
 });
 
-app.listen(PORT, () => console.log(`Casa Liezl Private Resort Server running on port ${PORT} (Local Mode)!`));
+app.listen(PORT, () => console.log(`Casa Liezl Private Resort Server running on port ${PORT}`));
