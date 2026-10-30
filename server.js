@@ -1,5 +1,5 @@
 const express = require('express');
-const multer = require('multer');
+const multer  = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport({
 // 🔒 MULTI-DEVICE ADMIN SESSIONS
 let activeSessions = new Set();
 
-// ☁️ CLOUDINARY CONFIGURATION
+// ☁️ CLOUDINARY CONFIGURATION (I-update mo ang API Secret kung sakaling iba pa sa Cloudinary dashboard mo)
 cloudinary.config({
   cloud_name: 'q7iyxzr4',
   api_key: '454148557875984',
@@ -37,24 +37,15 @@ cloudinary.config({
 // MULTER CLOUDINARY STORAGE
 const sliderStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: {
-    folder: 'resort_sliders',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif']
-  }
+  params: { folder: 'resort_sliders', allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'] }
 });
 
 const facilityStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
-  params: async (req, file) => {
-    let resourceType = 'image';
-    if (file && (file.mimetype.startsWith('video') || (req.body && req.body.mediaType === 'video'))) {
-      resourceType = 'video';
-    }
-    return {
-      folder: 'resort_facilities',
-      resource_type: resourceType,
-      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4', 'webm', 'mov']
-    };
+  params: { 
+    folder: 'resort_facilities', 
+    resource_type: 'auto',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'mp4', 'webm', 'mov'] 
   }
 });
 
@@ -224,44 +215,40 @@ app.delete('/api/reviews/:id', authAdmin, async (req, res) => {
   res.json({ success: true });
 });
 
-// FACILITIES GALLERY APIS (CLOUD STORAGE) + GET Fallback Guard
+// FACILITIES GALLERY APIS (CLOUD STORAGE)
 app.get('/api/facilities', async (req, res) => {
   const db = await getDB();
   res.json(db.facilities || []);
 });
 
-app.get('/upload-facility', (req, res) => {
-  res.redirect('/admin.html');
-});
-
 app.post('/upload-facility', uploadFacility.single('facilityMedia'), async (req, res) => {
-  try {
-    if (!req.file) return res.redirect('/admin.html?error=nofile');
+  if (!req.file) return res.redirect('/admin.html');
 
-    const { facilityTitle, mediaType } = req.body;
-    const db = await getDB();
-    const isVideo = mediaType === 'video' || (req.file.mimetype && req.file.mimetype.startsWith('video'));
+  const { facilityTitle, mediaType } = req.body;
+  const db = await getDB();
+  const isVideo = mediaType === 'video' || req.file.mimetype.startsWith('video');
 
-    const newFacility = {
-      id: 'fac_' + Date.now(),
-      title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
-      type: isVideo ? 'video' : 'image',
-      filename: req.file.path // Cloudinary Secure URL
-    };
+  const newFacility = {
+    id: 'fac_' + Date.now(),
+    title: facilityTitle ? facilityTitle.trim() : 'Resort Facility',
+    type: isVideo ? 'video' : 'image',
+    filename: req.file.path // Cloudinary Secure URL
+  };
 
-    db.facilities.unshift(newFacility);
-    await saveDB(db);
-    res.redirect('/admin.html');
-  } catch (err) {
-    console.error("Facility Upload Error:", err);
-    res.redirect('/admin.html?error=upload_failed');
-  }
+  db.facilities.unshift(newFacility);
+  await saveDB(db);
+  res.redirect('/admin.html');
 });
 
 app.delete('/api/facilities/:id', authAdmin, async (req, res) => {
   const db = await getDB();
-  db.facilities = db.facilities.filter(f => f.id !== req.params.id);
-  await saveDB(db);
+  const target = db.facilities.find(f => f.id === req.params.id);
+
+  if (target) {
+    // Extract public_id from Cloudinary URL if needed or just remove from DB array
+    db.facilities = db.facilities.filter(f => f.id !== req.params.id);
+    await saveDB(db);
+  }
   res.json({ success: true });
 });
 
@@ -271,7 +258,7 @@ app.get('/api/booked-dates', async (req, res) => {
   res.json(db.bookings.filter(b => b.status === 'APPROVED').map(b => b.checkInDate));
 });
 
-// SLIDER APIS (CLOUD STORAGE) + GET Fallback Guard
+// SLIDER APIS (CLOUD STORAGE)
 app.get('/api/sliders', async (req, res) => {
   try {
     const result = await cloudinary.search
@@ -285,20 +272,11 @@ app.get('/api/sliders', async (req, res) => {
   }
 });
 
-app.get('/upload-slider', (req, res) => {
-  res.redirect('/admin.html');
-});
-
-app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => {
-  try {
-    res.redirect('/admin.html');
-  } catch (err) {
-    res.redirect('/admin.html?error=slider_failed');
-  }
-});
+app.post('/upload-slider', uploadSlider.single('sliderImage'), (req, res) => res.redirect('/admin.html'));
 
 app.delete('/api/sliders/:public_id', authAdmin, async (req, res) => {
   try {
+    // Kung filename o buong url ang pinasa, burahin sa cloudinary
     const imageId = req.params.public_id;
     await cloudinary.uploader.destroy(`resort_sliders/${imageId}`);
     res.json({ success: true });
