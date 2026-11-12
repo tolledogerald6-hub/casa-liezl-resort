@@ -4,132 +4,165 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CASA LIEZL RESORT - Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #008080;
       --primary-dark: #004d4d;
       --accent: #ff7f50;
-      --bg: #f4f7f6;
+      --bg: #f0f4f8;
       --card-bg: #ffffff;
-      --text: #333333;
-      --border: #dddddd;
-      --success: #28a745;
-      --danger: #dc3545;
-      --warning: #ffc107;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding: 20px; }
-    .container { max-width: 1100px; margin: 0 auto; }
+    .container { max-width: 1180px; margin: 0 auto; }
 
+    /* HEADER */
     .header {
-      display: flex; justify-content: space-between; align-items: center;
-      background: var(--card-bg); padding: 15px 20px; border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff; padding: 18px 25px; border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0, 77, 77, 0.2); margin-bottom: 25px;
     }
-    .header h2 { color: var(--primary); }
-
-    .btn-logout {
-      background: var(--danger); color: #fff; border: none;
-      padding: 8px 15px; border-radius: 4px; cursor: pointer; font-weight: bold;
+    .header h2 { font-size: 1.4rem; display: flex; align-items: center; gap: 10px; }
+    .awake-pill {
+      background: rgba(16, 185, 129, 0.25); border: 1px solid #34d399; color: #d1fae5;
+      font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; font-weight: 500;
     }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
 
-    /* REVENUE SUMMARY CARDS */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px; }
-    .stat-card { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
-    .stat-card h4 { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
-    .stat-card .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--primary-dark); }
+    .btn {
+      padding: 8px 16px; border: none; border-radius: 8px; cursor: pointer;
+      font-weight: 600; font-size: 0.82rem; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn:hover { transform: translateY(-1px); opacity: 0.92; }
+    .btn-logout { background: var(--danger); color: #fff; }
+    .btn-home { background: rgba(255,255,255,0.2); color: #fff; text-decoration: none; }
 
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px; }
+    .stat-card {
+      background: var(--card-bg); padding: 20px; border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 5px solid var(--primary);
+    }
+    .stat-card h4 { font-size: 0.82rem; color: #64748b; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--primary-dark); }
+
+    /* LOGIN OVERLAY */
     #loginOverlay {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7); display: flex; justify-content: center;
-      align-items: center; z-index: 999;
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center; z-index: 999;
     }
-
     .login-box {
-      background: #fff; padding: 30px; border-radius: 10px;
-      width: 90%; max-width: 380px; text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      background: #fff; padding: 35px 30px; border-radius: 16px;
+      width: 90%; max-width: 390px; text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     }
-    .login-box h3 { color: var(--primary); margin-bottom: 15px; }
+    .login-box h3 { color: var(--primary-dark); margin-bottom: 20px; font-size: 1.4rem; }
     .login-box input {
-      width: 100%; padding: 10px; margin-bottom: 12px;
-      border: 1px solid var(--border); border-radius: 5px; font-size: 0.95rem;
+      width: 100%; padding: 12px 14px; margin-bottom: 14px;
+      border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem;
     }
     .btn-login {
       width: 100%; background: var(--primary); color: #fff;
-      padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+      padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 1rem;
     }
 
+    /* SECTION BOX */
     .section-box {
-      background: var(--card-bg); padding: 20px; border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 25px;
+      background: var(--card-bg); padding: 24px; border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid var(--border);
     }
-    .section-box h3 { color: var(--primary-dark); margin-bottom: 12px; }
+    .section-box h3 { color: var(--primary-dark); margin-bottom: 16px; font-size: 1.15rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 
-    .upload-form-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-    .slider-card { position: relative; border-radius: 6px; overflow: hidden; border: 1px solid var(--border); background: #000; }
-    .slider-card img, .slider-card video { width: 100%; height: 100px; object-fit: cover; }
+    .upload-form-row { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; background: #f8fafc; padding: 14px; border-radius: 10px; border: 1px dashed var(--border); }
+    .slider-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .slider-card { position: relative; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: #000; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .slider-card img, .slider-card video { width: 100%; height: 115px; object-fit: cover; display: block; }
 
     .btn-del-img {
-      position: absolute; top: 5px; right: 5px; background: var(--danger);
-      color: #fff; border: none; border-radius: 3px; padding: 3px 6px; cursor: pointer; font-size: 0.75rem; z-index: 5;
+      position: absolute; top: 6px; right: 6px; background: rgba(239, 68, 68, 0.9);
+      color: #fff; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 0.72rem; font-weight: 600; z-index: 5;
     }
 
-    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--primary-dark); font-size: 0.85rem; }
-    .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; }
+    .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--primary-dark); font-size: 0.85rem; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; }
 
-    /* SEARCH & FILTER CONTROLS */
-    .filter-bar { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-    .filter-bar input, .filter-bar select { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 0.9rem; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-bar input, .filter-bar select { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.9rem; }
     .filter-bar input { flex-grow: 1; }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
-    th { background: #e6f2f2; color: var(--primary-dark); }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { padding: 13px 12px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.86rem; }
+    th { background: #f1f5f9; color: var(--primary-dark); font-weight: 600; }
+    tr:hover { background: #f8fafc; }
 
-    .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
-    .badge-pending { background: var(--warning); color: #000; }
-    .badge-approved { background: var(--success); color: #fff; }
-    .badge-rejected { background: var(--danger); color: #fff; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-weight: 600; font-size: 0.73rem; display: inline-block; }
+    .badge-pending { background: #fef3c7; color: #b45309; }
+    .badge-approved { background: #d1fae5; color: #047857; }
+    .badge-rejected { background: #fee2e2; color: #b91c1c; }
 
-    .btn-action { padding: 5px 10px; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 0.75rem; margin-right: 3px; }
+    .btn-action { padding: 6px 11px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; margin-right: 4px; margin-bottom: 4px; }
     .btn-approve { background: var(--success); color: #fff; }
     .btn-reject { background: var(--danger); color: #fff; }
+    .btn-secondary { background: #64748b; color: #fff; }
+
+    /* TOAST NOTIFICATION */
+    #toastBox { position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { background: #1e293b; color: #fff; padding: 12px 20px; border-radius: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); font-size: 0.88rem; border-left: 5px solid var(--success); animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
 
+  <div id="toastBox"></div>
+
+  <!-- LOGIN OVERLAY -->
   <div id="loginOverlay">
     <div class="login-box">
       <h3>🔒 CASA LIEZL ADMIN</h3>
       <form onsubmit="loginAdmin(event)">
-        <input type="text" id="adminUser" required placeholder="Username">
-        <input type="password" id="adminPass" required placeholder="Password">
-        <button type="submit" class="btn-login">LOGIN</button>
-        <div id="loginErr" style="color: var(--danger); font-size: 0.8rem; margin-top: 10px;"></div>
+        <input type="text" id="adminUser" required placeholder="Admin Username">
+        <input type="password" id="adminPass" required placeholder="Admin Password">
+        <button type="submit" class="btn-login">LOGIN TO DASHBOARD</button>
+        <div id="loginErr" style="color: var(--danger); font-size: 0.85rem; margin-top: 12px;"></div>
       </form>
     </div>
   </div>
 
   <div class="container" id="adminDashboard" style="display: none;">
     <div class="header">
-      <h2>🌴 Casa Liezl Resort - Admin Dashboard</h2>
-      <button class="btn-logout" onclick="logoutAdmin()">LOGOUT</button>
+      <div>
+        <h2>🌴 Casa Liezl Resort - Admin Panel <span class="awake-pill" id="awakeStatus">⚡ Auto-Awake Active</span></h2>
+      </div>
+      <div class="header-actions">
+        <a href="/" class="btn btn-home">🏠 View Live Website</a>
+        <button class="btn btn-logout" onclick="logoutAdmin()">🚪 LOGOUT</button>
+      </div>
     </div>
 
-    <!-- 📊 REVENUE & STATS TRACKER -->
+    <!-- 📊 STATS TRACKER -->
     <div class="stats-grid">
       <div class="stat-card">
-        <h4>💰 Total Approved Bookings</h4>
+        <h4>✅ Approved Bookings</h4>
         <div class="stat-value" id="statTotalBookings">0</div>
       </div>
       <div class="stat-card" style="border-left-color: var(--warning);">
         <h4>⏳ Pending Approvals</h4>
         <div class="stat-value" id="statPendingBookings">0</div>
+      </div>
+      <div class="stat-card" style="border-left-color: #3b82f6;">
+        <h4>📋 Total Reservations</h4>
+        <div class="stat-value" id="statAllBookings">0</div>
       </div>
     </div>
 
@@ -140,7 +173,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>GCash Account Name</label>
-            <input type="text" id="setGcashName" required placeholder="e.g. SH***A I.">
+            <input type="text" id="setGcashName" required placeholder="e.g. LIEZL RESORT">
           </div>
           <div class="form-group">
             <label>GCash Number</label>
@@ -161,16 +194,16 @@
             <input type="number" id="setRateOvernight" required>
           </div>
         </div>
-        <button type="submit" class="btn-action btn-approve" style="padding: 10px 20px; font-size: 0.85rem;">SAVE SETTINGS</button>
+        <button type="submit" class="btn btn-approve" style="padding: 10px 22px;">💾 SAVE SETTINGS</button>
       </form>
     </div>
 
     <!-- 📸 HERO SLIDER IMAGES -->
     <div class="section-box">
       <h3>📸 Upload Banner Slide Pictures</h3>
-      <form action="/upload-slider" method="POST" enctype="multipart/form-data" class="upload-form-row">
-        <input type="file" name="sliderImage" accept="image/*" required style="padding: 5px;">
-        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD BANNER</button>
+      <form onsubmit="uploadSliderAjax(event)" class="upload-form-row">
+        <input type="file" id="sliderFileInput" name="sliderImage" accept="image/*" required style="padding: 5px;">
+        <button type="submit" id="btnUploadSlider" class="btn btn-approve">⬆️ UPLOAD BANNER</button>
       </form>
       <div class="slider-grid" id="sliderImagesGrid"></div>
     </div>
@@ -178,14 +211,14 @@
     <!-- 🏊‍♂️ FACILITIES MEDIA MANAGEMENT -->
     <div class="section-box">
       <h3>📹 Upload Resort Facilities (Images & Videos)</h3>
-      <form action="/upload-facility" method="POST" enctype="multipart/form-data" class="upload-form-row">
-        <input type="file" name="facilityMedia" accept="image/*,video/*" required style="padding: 5px;">
-        <input type="text" name="facilityTitle" placeholder="Label / Title (e.g. Adult Pool)" required style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
-        <select name="mediaType" required style="padding: 8px; border-radius: 4px; border: 1px solid var(--border);">
+      <form onsubmit="uploadFacilityAjax(event)" class="upload-form-row">
+        <input type="file" id="facilityFileInput" name="facilityMedia" accept="image/*,video/*" required style="padding: 5px;">
+        <input type="text" id="facilityTitleInput" name="facilityTitle" placeholder="Label / Title (e.g. Adult Pool)" required style="padding: 9px 12px; border-radius: 6px; border: 1px solid var(--border); flex: 1;">
+        <select id="facilityTypeInput" name="mediaType" required style="padding: 9px 12px; border-radius: 6px; border: 1px solid var(--border);">
           <option value="image">🖼️ Image</option>
           <option value="video">🎥 Video (.mp4 / .webm)</option>
         </select>
-        <button type="submit" class="btn-action btn-approve" style="padding: 8px 15px;">UPLOAD MEDIA</button>
+        <button type="submit" id="btnUploadFacility" class="btn btn-approve">⬆️ UPLOAD MEDIA</button>
       </form>
       <div class="slider-grid" id="facilityImagesGrid"></div>
     </div>
@@ -193,15 +226,14 @@
     <!-- 📋 BOOKINGS -->
     <div class="section-box">
       <h3>📋 Listahan ng mga Reservations</h3>
-      
-      <!-- SEARCH & FILTER BAR -->
+
       <div class="filter-bar">
-        <input type="text" id="searchBookingInput" placeholder="🔍 Maghanap sa pangalan o phone number..." oninput="filterBookings()">
+        <input type="text" id="searchBookingInput" placeholder="🔍 Search guest name, phone, GCash ref, or date..." oninput="filterBookings()">
         <select id="statusFilterSelect" onchange="filterBookings()">
-          <option value="ALL">Lahat ng Status</option>
-          <option value="PENDING">Pending</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REJECTED">Rejected</option>
+          <option value="ALL">All Statuses</option>
+          <option value="PENDING">⏳ Pending</option>
+          <option value="APPROVED">✅ Approved</option>
+          <option value="REJECTED">❌ Rejected</option>
         </select>
       </div>
 
@@ -245,24 +277,68 @@
         </table>
       </div>
     </div>
+
+    <!-- 💾 DATA BACKUP & RESTORE -->
+    <div class="section-box">
+      <h3>🛡️ Data Protection (Backup & Restore)</h3>
+      <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 14px;">
+        I-download ang backup file para siguradong ligtas lahat ng bookings, reviews, settings, at pictures kahit mag-redeploy ng server.
+      </p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+        <button class="btn btn-approve" onclick="downloadBackup()">📥 Download Full Backup (.json)</button>
+        <label class="btn btn-secondary" style="cursor: pointer;">
+          📤 Restore from Backup File
+          <input type="file" id="restoreFileInput" accept=".json" style="display: none;" onchange="restoreBackup(event)">
+        </label>
+      </div>
+    </div>
   </div>
 
   <script>
     let authToken = localStorage.getItem('resortAdminToken') || "";
     let globalBookings = [];
 
-    if (authToken) { showDashboard(); }
+    function showToast(msg, isError = false) {
+      const box = document.getElementById('toastBox');
+      const t = document.createElement('div');
+      t.className = 'toast';
+      if (isError) t.style.borderLeftColor = '#ef4444';
+      t.innerText = msg;
+      box.appendChild(t);
+      setTimeout(() => t.remove(), 3500);
+    }
+
+    if (authToken) { verifyAndShowDashboard(); }
+
+    function verifyAndShowDashboard() {
+      fetch('/api/admin/bookings', { headers: { 'Authorization': `Bearer ${authToken}` } })
+        .then(r => {
+          if (r.status === 401) {
+            localStorage.removeItem('resortAdminToken');
+            document.getElementById('loginOverlay').style.display = 'flex';
+            return null;
+          }
+          return r.json();
+        })
+        .then(data => {
+          if (data) showDashboard();
+        });
+    }
 
     function loginAdmin(e) {
       if (e) e.preventDefault();
       fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: document.getElementById('adminUser').value, password: document.getElementById('adminPass').value })
+        body: JSON.stringify({
+          username: document.getElementById('adminUser').value,
+          password: document.getElementById('adminPass').value
+        })
       }).then(r => r.json()).then(d => {
         if (d.success) {
           authToken = d.token;
           localStorage.setItem('resortAdminToken', authToken);
+          showToast("Welcome back, Admin!");
           showDashboard();
         } else {
           document.getElementById('loginErr').innerText = d.message || "Invalid Credentials!";
@@ -283,12 +359,14 @@
       loadSliderAdmin();
       loadFacilityAdmin();
       loadAdminReviews();
-      setInterval(loadBookings, 5000);
+      setInterval(loadBookings, 6000);
+      // Keep-alive ping every 4 minutes while dashboard is open
+      setInterval(() => fetch('/api/ping'), 240000);
     }
 
     function loadSettings() {
       fetch('/api/settings').then(r => r.json()).then(s => {
-        document.getElementById('setGcashName').value = s.gcashName || 'SH***A I.';
+        document.getElementById('setGcashName').value = s.gcashName || 'LIEZL RESORT';
         document.getElementById('setGcashNum').value = s.gcashNumber || '09655247530';
         if (s.rates) {
           document.getElementById('setRateDay').value = s.rates.dayTour || 1500;
@@ -313,15 +391,48 @@
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
         body: JSON.stringify(payload)
       }).then(r => r.json()).then(d => {
-        alert(d.message || "Settings updated!");
+        showToast(d.message || "Settings saved!");
         loadSettings();
+      });
+    }
+
+    // AJAX BANNER UPLOAD
+    function uploadSliderAjax(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('sliderFileInput');
+      if (!fileInput.files.length) return;
+      const btn = document.getElementById('btnUploadSlider');
+      btn.disabled = true; btn.innerText = "Uploading...";
+
+      const formData = new FormData();
+      formData.append('sliderImage', fileInput.files[0]);
+
+      fetch('/upload-slider', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      }).then(r => r.json()).then(d => {
+        btn.disabled = false; btn.innerText = "⬆️ UPLOAD BANNER";
+        if (d.success) {
+          fileInput.value = '';
+          showToast("Banner uploaded & saved!");
+          loadSliderAdmin();
+        } else {
+          showToast(d.message || "Upload failed", true);
+        }
+      }).catch(() => {
+        btn.disabled = false; btn.innerText = "⬆️ UPLOAD BANNER";
+        showToast("Upload error!", true);
       });
     }
 
     function loadSliderAdmin() {
       fetch('/api/sliders').then(r => r.json()).then(images => {
         const grid = document.getElementById('sliderImagesGrid');
-        if (!images || !images.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No banner pictures uploaded yet.</p>'; return; }
+        if (!images || !images.length) {
+          grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No banner pictures uploaded yet.</p>';
+          return;
+        }
         grid.innerHTML = images.map(img => `
           <div class="slider-card">
             <img src="/slider-images/${img}">
@@ -332,25 +443,70 @@
     }
 
     function deleteSlider(filename) {
-      if(!confirm("Delete this banner?")) return;
-      fetch(`/api/sliders/${filename}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadSliderAdmin());
+      if (!confirm("Delete this banner image?")) return;
+      fetch(`/api/sliders/${encodeURIComponent(filename)}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).then(() => {
+        showToast("Banner deleted.");
+        loadSliderAdmin();
+      });
+    }
+
+    // AJAX FACILITY UPLOAD
+    function uploadFacilityAjax(e) {
+      e.preventDefault();
+      const fileInput = document.getElementById('facilityFileInput');
+      const titleInput = document.getElementById('facilityTitleInput');
+      const typeInput = document.getElementById('facilityTypeInput');
+      if (!fileInput.files.length) return;
+
+      const btn = document.getElementById('btnUploadFacility');
+      btn.disabled = true; btn.innerText = "Uploading...";
+
+      const formData = new FormData();
+      formData.append('facilityMedia', fileInput.files[0]);
+      formData.append('facilityTitle', titleInput.value);
+      formData.append('mediaType', typeInput.value);
+
+      fetch('/upload-facility', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      }).then(r => r.json()).then(d => {
+        btn.disabled = false; btn.innerText = "⬆️ UPLOAD MEDIA";
+        if (d.success) {
+          fileInput.value = '';
+          titleInput.value = '';
+          showToast("Facility media uploaded & saved!");
+          loadFacilityAdmin();
+        } else {
+          showToast(d.message || "Upload failed", true);
+        }
+      }).catch(() => {
+        btn.disabled = false; btn.innerText = "⬆️ UPLOAD MEDIA";
+        showToast("Upload error!", true);
+      });
     }
 
     function loadFacilityAdmin() {
       fetch('/api/facilities').then(r => r.json()).then(items => {
         const grid = document.getElementById('facilityImagesGrid');
-        if (!items || !items.length) { grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No facility media uploaded yet.</p>'; return; }
+        if (!items || !items.length) {
+          grid.innerHTML = '<p style="color:#888; font-size:0.85rem;">No facility media uploaded yet.</p>';
+          return;
+        }
 
         grid.innerHTML = items.map(item => {
           const isVid = item.type === 'video' || /\.(mp4|webm|mov)$/i.test(item.filename);
-          const mediaTag = isVid 
-            ? `<video src="/facility-images/${item.filename}"></video>` 
+          const mediaTag = isVid
+            ? `<video src="/facility-images/${item.filename}" muted></video>`
             : `<img src="/facility-images/${item.filename}">`;
 
           return `
             <div class="slider-card">
               ${mediaTag}
-              <div style="font-size:0.75rem; padding:3px; background:#fff; color:#333; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
+              <div style="font-size:0.75rem; padding:5px; background:#fff; color:#1e293b; font-weight:600; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">
                 ${isVid ? '🎥' : '🖼️'} ${item.title}
               </div>
               <button class="btn-del-img" onclick="deleteFacility('${item.id}')">🗑️ Delete</button>
@@ -361,46 +517,60 @@
     }
 
     function deleteFacility(id) {
-      if(!confirm("Delete this facility media?")) return;
-      fetch(`/api/facilities/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadFacilityAdmin());
+      if (!confirm("Delete this facility media?")) return;
+      fetch(`/api/facilities/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).then(() => {
+        showToast("Facility media removed.");
+        loadFacilityAdmin();
+      });
     }
 
     function loadAdminReviews() {
       fetch('/api/reviews').then(r => r.json()).then(reviews => {
         const tbody = document.getElementById('reviewsTableBody');
-        if (!reviews || !reviews.length) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No reviews yet.</td></tr>'; return; }
+        if (!reviews || !reviews.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No reviews yet.</td></tr>';
+          return;
+        }
         tbody.innerHTML = reviews.map(r => `
           <tr>
-            <td><small style="color:#777;">${r.date}</small></td>
+            <td><small style="color:#64748b;">${r.date}</small></td>
             <td><strong>${r.name}</strong></td>
-            <td><span style="color:#f39c12;">${'⭐'.repeat(r.rating)}</span></td>
+            <td><span style="color:#f59e0b;">${'⭐'.repeat(r.rating)}</span></td>
             <td>${r.comment}</td>
-            <td><button class="btn-action btn-reject" onclick="deleteReview(${r.id})">Delete</button></td>
+            <td><button class="btn-action btn-reject" onclick="deleteReview(${r.id})">🗑️ Delete</button></td>
           </tr>
         `).join('');
       });
     }
 
     function deleteReview(id) {
-      if(!confirm("Delete this review?")) return;
-      fetch(`/api/reviews/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${authToken}` } }).then(() => loadAdminReviews());
+      if (!confirm("Delete this review?")) return;
+      fetch(`/api/reviews/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).then(() => {
+        showToast("Review deleted.");
+        loadAdminReviews();
+      });
     }
 
     function loadBookings() {
       fetch('/api/admin/bookings', { headers: { 'Authorization': `Bearer ${authToken}` } })
       .then(r => r.json()).then(bookings => {
-        globalBookings = bookings || [];
+        if (!Array.isArray(bookings)) return;
+        globalBookings = bookings;
         updateStats(globalBookings);
-        renderBookingsTable(globalBookings);
+        filterBookings();
       });
     }
 
     function updateStats(bookings) {
-      const approvedCount = bookings.filter(b => b.status === 'APPROVED').length;
-      const pendingCount = bookings.filter(b => b.status === 'PENDING').length;
-
-      document.getElementById('statTotalBookings').innerText = approvedCount;
-      document.getElementById('statPendingBookings').innerText = pendingCount;
+      document.getElementById('statTotalBookings').innerText = bookings.filter(b => b.status === 'APPROVED').length;
+      document.getElementById('statPendingBookings').innerText = bookings.filter(b => b.status === 'PENDING').length;
+      document.getElementById('statAllBookings').innerText = bookings.length;
     }
 
     function filterBookings() {
@@ -408,7 +578,11 @@
       const statusFilter = document.getElementById('statusFilterSelect').value;
 
       const filtered = globalBookings.filter(b => {
-        const matchQuery = b.name.toLowerCase().includes(query) || b.phone.includes(query) || b.checkInDate.includes(query);
+        const matchQuery =
+          (b.name || '').toLowerCase().includes(query) ||
+          (b.phone || '').includes(query) ||
+          (b.checkInDate || '').includes(query) ||
+          (b.gcashRef || '').toLowerCase().includes(query);
         const matchStatus = statusFilter === 'ALL' || b.status === statusFilter;
         return matchQuery && matchStatus;
       });
@@ -418,44 +592,103 @@
 
     function renderBookingsTable(bookings) {
       const tbody = document.getElementById('bookingsTableBody');
-      if (!bookings || !bookings.length) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">No booking requests found.</td></tr>'; return; }
+      if (!bookings || !bookings.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#64748b;">No booking requests found.</td></tr>';
+        return;
+      }
 
       tbody.innerHTML = bookings.map(b => {
         let statusBadge = `<span class="badge badge-pending">PENDING</span>`;
         if (b.status === 'APPROVED') statusBadge = `<span class="badge badge-approved">APPROVED</span>`;
         if (b.status === 'REJECTED') statusBadge = `<span class="badge badge-rejected">REJECTED</span>`;
 
-        let actionBtns = '';
-        if (b.status === 'PENDING') {
-          actionBtns = `
-            <button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">APPROVE</button>
-            <button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">REJECT</button>
-          `;
-        } else {
-          actionBtns = `<a href="/api/download-voucher/${b.id}" target="_blank" style="font-size:0.75rem; color:var(--primary); font-weight:bold; text-decoration:none;">📄 PDF Receipt</a>`;
-        }
-
         return `
           <tr>
-            <td><strong>${b.name}</strong><br><small style="color:#777;">${b.createdAt}</small></td>
-            <td>${b.phone}</td>
+            <td>
+              <strong>${b.name}</strong><br>
+              <small style="color:#64748b;">#${b.id} • ${b.createdAt}</small>
+              ${b.notes ? `<br><small style="color:#008080;">📝 "${b.notes}"</small>` : ''}
+            </td>
+            <td><a href="tel:${b.phone}" style="color:var(--primary-dark); font-weight:600; text-decoration:none;">📞 ${b.phone}</a></td>
             <td><strong>${b.checkInDate}</strong><br><small>${b.stayType}</small></td>
-            <td>${b.packageType}<br><small>(${b.guests} Guests)</small></td>
+            <td>${b.packageType}<br><small>(${b.guests} Pax)</small></td>
             <td><strong style="color:var(--primary);">${b.gcashRef}</strong></td>
             <td>${statusBadge}</td>
-            <td>${actionBtns}</td>
+            <td>
+              ${b.status !== 'APPROVED' ? `<button class="btn-action btn-approve" onclick="processBooking(${b.id}, 'APPROVE')">✓ Approve</button>` : ''}
+              ${b.status !== 'REJECTED' ? `<button class="btn-action btn-reject" onclick="processBooking(${b.id}, 'REJECT')">✕ Reject</button>` : ''}
+              <a href="/api/download-voucher/${b.id}" target="_blank" class="btn-action btn-secondary" style="text-decoration:none; display:inline-block;">📄 PDF</a>
+              <button class="btn-action btn-reject" style="background:#94a3b8;" onclick="deleteBooking(${b.id})" title="Delete Record">🗑️</button>
+            </td>
           </tr>
         `;
       }).join('');
     }
 
     function processBooking(id, action) {
-      if (!confirm(`Are you sure you want to ${action} this booking?`)) return;
+      if (!confirm(`Confirm ${action} for this reservation?`)) return;
       fetch('/api/admin/process-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
         body: JSON.stringify({ id, action })
-      }).then(r => r.json()).then(d => { if (d.success) loadBookings(); });
+      }).then(r => r.json()).then(d => {
+        if (d.success) {
+          showToast(`Booking marked as ${d.status}!`);
+          loadBookings();
+        }
+      });
+    }
+
+    function deleteBooking(id) {
+      if (!confirm("Permanently delete this booking record?")) return;
+      fetch(`/api/admin/bookings/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).then(r => r.json()).then(d => {
+        if (d.success) {
+          showToast("Booking deleted.");
+          loadBookings();
+        }
+      });
+    }
+
+    function downloadBackup() {
+      fetch('/api/admin/backup', { headers: { 'Authorization': `Bearer ${authToken}` } })
+        .then(r => r.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `CasaLiezl_Backup_${new Date().toISOString().split('T')[0]}.json`;
+          a.click();
+          showToast("Backup downloaded!");
+        });
+    }
+
+    function restoreBackup(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          const json = JSON.parse(evt.target.result);
+          fetch('/api/admin/restore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+            body: JSON.stringify(json)
+          }).then(r => r.json()).then(d => {
+            if (d.success) {
+              showToast(d.message);
+              showDashboard();
+            } else {
+              showToast(d.message || "Restore failed", true);
+            }
+          });
+        } catch (err) {
+          showToast("Invalid JSON backup file!", true);
+        }
+      };
+      reader.readAsText(file);
     }
   </script>
 </body>
